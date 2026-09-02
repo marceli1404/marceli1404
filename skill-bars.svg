@@ -8,39 +8,39 @@
   <text class="label" x="10" y="25">JavaScript</text>
   <rect class="bar-bg" x="120" y="15" width="200" height="12" rx="2"/>
   <rect class="bar-fill" x="120" y="15" width="0" height="12" rx="2" fill="#4facfe">
-    <animate attributeName="width" values="0;180" dur="2s" fill="freeze"/>
+    <animate attributeName="width" from="0" to="180" dur="2s" repeatCount="1" fill="freeze"/>
   </rect>
   <text class="value" x="330" y="27">90%</text>
-  
+
   <!-- Python -->
   <text class="label" x="10" y="50">Python</text>
   <rect class="bar-bg" x="120" y="40" width="200" height="12" rx="2"/>
   <rect class="bar-fill-2" x="120" y="40" width="0" height="12" rx="2" fill="#00f2fe">
-    <animate attributeName="width" values="0;160" dur="2s" fill="freeze"/>
+    <animate attributeName="width" from="0" to="160" dur="2s" repeatCount="1" fill="freeze"/>
   </rect>
   <text class="value" x="330" y="52">80%</text>
-  
+
   <!-- TypeScript -->
   <text class="label" x="10" y="75">TypeScript</text>
   <rect class="bar-bg" x="120" y="65" width="200" height="12" rx="2"/>
   <rect class="bar-fill-3" x="120" y="65" width="0" height="12" rx="2" fill="#43e97b">
-    <animate attributeName="width" values="0;150" dur="2s" fill="freeze"/>
+    <animate attributeName="width" from="0" to="150" dur="2s" repeatCount="1" fill="freeze"/>
   </rect>
   <text class="value" x="330" y="77">75%</text>
-  
+
   <!-- PowerShell -->
   <text class="label" x="10" y="100">PowerShell</text>
   <rect class="bar-bg" x="120" y="90" width="200" height="12" rx="2"/>
   <rect class="bar-fill-4" x="120" y="90" width="0" height="12" rx="2" fill="#ffb400">
-    <animate attributeName="width" values="0;140" dur="2s" fill="freeze"/>
+    <animate attributeName="width" from="0" to="140" dur="2s" repeatCount="1" fill="freeze"/>
   </rect>
   <text class="value" x="330" y="102">70%</text>
-  
+
   <!-- AI/ML -->
   <text class="label" x="10" y="125">AI/ML</text>
   <rect class="bar-bg" x="120" y="115" width="200" height="12" rx="2"/>
   <rect class="bar-fill-5" x="120" y="115" width="0" height="12" rx="2" fill="#ff006e">
-    <animate attributeName="width" values="0;170" dur="2s" fill="freeze"/>
+    <animate attributeName="width" from="0" to="170" dur="2s" repeatCount="1" fill="freeze"/>
   </rect>
   <text class="value" x="330" y="127">85%</text>
 </svg>

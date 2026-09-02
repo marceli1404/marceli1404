@@ -1,46 +1,23 @@
 <svg width="400" height="60" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .label { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-      font-size: 14px; 
-      fill: #666;
-    }
-    .tag {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 12px;
-      fill: #fff;
-      background: #4facfe;
-      padding: 2px 8px;
-      border-radius: 12px;
-      margin: 2px;
-      display: inline-block;
-    }
-    .tag-1 { 
-      animation: tagPulse 3s ease-in-out infinite;
-    }
-    .tag-2 { 
-      animation: tagPulse 3s ease-in-out 0.5s infinite;
-    }
-    .tag-3 { 
-      animation: tagPulse 3s ease-in-out 1s infinite;
-    }
-    .tag-4 { 
-      animation: tagPulse 3s ease-in-out 1.5s infinite;
-    }
-    @keyframes tagPulse {
-      0%, 100% { 
-        background: #4facfe;
-        transform: scale(1);
-      }
-      50% { 
-        background: #00f2fe;
-        transform: scale(1.05);
-      }
-    }
-  </style>
-  <text class="label" x="10" y="20">Currently working on:</text>
-  <text class="tag tag-1" x="150" y="25">AI Agents</text>
-  <text class="tag tag-2" x="250" y="25">Automation</text>
-  <text class="tag tag-3" x="350" y="25">Open Source</text>
-  <text class="tag tag-4" x="450" y="25">Dev Tools</text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="14" fill="#666" x="10" y="20">Currently working on:</text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="12" fill="#fff" x="150" y="25">
+    AI Agents
+    <animate attributeName="fill" values="#4facfe;#00f2fe;#4facfe" dur="3s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="3s" repeatCount="indefinite"/>
+  </text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="12" fill="#fff" x="250" y="25">
+    Automation
+    <animate attributeName="fill" values="#4facfe;#00f2fe;#4facfe" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+    <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+  </text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="12" fill="#fff" x="350" y="25">
+    Open Source
+    <animate attributeName="fill" values="#4facfe;#00f2fe;#4facfe" dur="3s" repeatCount="indefinite" begin="1s"/>
+    <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="3s" repeatCount="indefinite" begin="1s"/>
+  </text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="12" fill="#fff" x="450" y="25">
+    Dev Tools
+    <animate attributeName="fill" values="#4facfe;#00f2fe;#4facfe" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+    <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+  </text>
 </svg>

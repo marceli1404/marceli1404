@@ -2,41 +2,27 @@
   <style>
     .title { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; font-weight: bold; fill: #333; }
     .item { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; fill: #666; }
-    .dot { 
-      width: 8px; 
-      height: 8px; 
-      background: #4facfe;
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    .dot-2 { 
-      animation-delay: 0.5s;
-    }
-    .dot-3 { 
-      animation-delay: 1s;
-    }
-    @keyframes pulse {
-      0%, 100% { 
-        opacity: 0.6;
-        transform: scale(0.8);
-      }
-      50% { 
-        opacity: 1;
-        transform: scale(1.2);
-      }
-    }
     .date { font-size: 12px; fill: #999; }
   </style>
   <text class="title" x="20" y="25">Recent Activity</text>
-  <circle class="dot" cx="20" cy="50" r="4"/>
+  <circle cx="20" cy="50" r="4" fill="#4facfe">
+    <animate attributeName="transform" type="scale" values="0.8;1.2;0.8" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
   <text class="item" x="35" y="55">Updated opencode-mobile with new AI features</text>
   <text class="date" x="35" y="70">2 hours ago</text>
-  
-  <circle class="dot dot-2" cx="20" cy="75" r="4"/>
+
+  <circle cx="20" cy="75" r="4" fill="#4facfe">
+    <animate attributeName="transform" type="scale" values="0.8;1.2;0.8" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
   <text class="item" x="35" y="80">Fixed bug in system-automation Gmail integration</text>
   <text class="date" x="35" y="95">5 hours ago</text>
-  
-  <circle class="dot dot-3" cx="20" cy="100" r="4"/>
+
+  <circle cx="20" cy="100" r="4" fill="#4facfe">
+    <animate attributeName="transform" type="scale" values="0.8;1.2;0.8" dur="2s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" begin="1s"/>
+  </circle>
   <text class="item" x="35" y="105">Added new profiles to codex-zen-proxy</text>
   <text class="date" x="35" y="120">1 day ago</text>
 </svg>
