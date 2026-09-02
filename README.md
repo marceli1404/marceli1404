@@ -22,7 +22,10 @@ Passionate AI engineer and open source developer specializing in AI agent develo
 ### 🛠️ Technical Skills
 ![Skill Bars](skill-bars.svg)
 
-### 📈 GitHub Stats
+### 📈 Recent Activity
+![Recent Activity](recent-activity.svg)
+
+### 📊 GitHub Stats
 ![marceli1404's GitHub stats](https://github-readme-stats.vercel.app/api?username=marceli1404&show_icons=true&theme=radical)
 
 ### 🏆 Recent Achievements
