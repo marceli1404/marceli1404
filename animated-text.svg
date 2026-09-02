@@ -5,11 +5,17 @@
       font-size: 24px;
       font-weight: bold;
       fill: #4facfe;
-      animation: color-change 3s infinite alternate;
+      animation: textAnimation 2s ease-in-out infinite alternate;
     }
-    @keyframes color-change {
-      from { fill: #4facfe; }
-      to { fill: #00f2fe; }
+    @keyframes textAnimation {
+      from {
+        fill: #4facfe;
+        transform: scale(1);
+      }
+      to {
+        fill: #00f2fe;
+        transform: scale(1.05);
+      }
     }
   </style>
   <text class="text" x="0" y="30">marceli1404</text>
