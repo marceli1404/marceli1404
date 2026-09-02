@@ -14,19 +14,12 @@
 Passionate AI engineer and open source developer specializing in AI agent development, automation systems, and developer tools. I build practical solutions that bridge the gap between cutting-edge AI technologies and real-world applications.
 
 ### 🔥 Featured Projects
-
-| Project | Description | Tech Stack | Stars |
-|---------|-------------|------------|-------|
-| [opencode-mobile](https://github.com/marceli1404/opencode-mobile) | Mobile-optimized web UI for accessing OpenCode AI coding agent from your phone via GitHub Codespaces | JavaScript, Vite, HTML/CSS | 0 |
-| [codex-zen-proxy](https://github.com/marceli1404/codex-zen-proxy) | Run OpenAI Codex on OpenCode Zen models via local proxy with one-command PowerShell setup | PowerShell, JavaScript | 1 |
-| [system-automation](https://github.com/marceli1404/system-automation) | Comprehensive system automation suite for Gmail, Puppeteer, and process management | JavaScript, Puppeteer, Playwright | 1 |
+![Project Showcase](project-showcase.svg)
 
 ### 🛠️ Technical Skills
-
 ![Skill Bars](skill-bars.svg)
 
 ### 📈 GitHub Stats
-
 ![marceli1404's GitHub stats](https://github-readme-stats.vercel.app/api?username=marceli1404&show_icons=true&theme=radical)
 
 ### 🏆 Recent Achievements
