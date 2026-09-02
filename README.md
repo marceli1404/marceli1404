@@ -23,28 +23,7 @@ Passionate AI engineer and open source developer specializing in AI agent develo
 
 ### 🛠️ Technical Skills
 
-**Languages & Frameworks:**  
-![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript)
-![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript)
-![Python](https://img.shields.io/badge/-Python-3776AB?logo=python)
-![PowerShell](https://img.shields.io/badge/-PowerShell-5391FE?logo=powershell)
-![HTML5](https://img.shields.io/badge/-HTML5-E34F26?logo=html5)
-![CSS3](https://img.shields.io/badge/-CSS3-1572B6?logo=css3)
-
-**AI & Automation:**  
-![OpenCode](https://img.shields.io/badge/-OpenCode-000000?logo=openai)
-![Claude Code](https://img.shields.io/badge/-Claude_Code-#FF6F3B?logo=anthropic)
-![OpenAI](https://img.shields.io/badge/-OpenCode-412991?logo=openai)
-![Puppeteer](https://img.shields.io/badge/-Puppeteer-40B5A4?logo=puppeteer)
-![Playwright](https://img.shields.io/badge/-Playwright-233288?logo=playwright)
-
-**Tools & Platforms:**  
-![Git](https://img.shields.io/badge/-Git-F05032?logo=git)
-![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)
-![VS Code](https://img.shields.io/badge/-VS_Code-007ACC?logo=visual-studio-code)
-![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker)
-![Linux](https://img.shields.io/badge/-Linux-FCC624?logo=linux)
-![Windows](https://img.shields.io/badge/-Windows-0078D6?logo=windows)
+![Skill Bars](skill-bars.svg)
 
 ### 📈 GitHub Stats
 
