@@ -1,8 +1,10 @@
 ![Animated Title](animated-text.svg)
 
-# marceli1404
+# Marceli
 
 ## AI Engineer & Open Source Developer
+
+![Terminal Loading](loading-text.svg)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/marceli1404)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?logo=linkedin)](https://linkedin.com/in/marceli1404)

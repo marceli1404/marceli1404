@@ -1,0 +1,21 @@
+<svg width="350" height="30" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      fill: #0f0;
+    }
+    .cursor {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      fill: #0f0;
+      animation: blink 1s ease-in-out infinite alternate;
+    }
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+  </style>
+  <text class="label" x="0" y="20">Marceli is working on AI projects...</text>
+  <text class="cursor" x="280" y="20">_</text>
+</svg>
