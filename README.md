@@ -13,7 +13,10 @@
 ### About Me
 Passionate AI engineer and open source developer specializing in AI agent development, automation systems, and developer tools. I build practical solutions that bridge the gap between cutting-edge AI technologies and real-world applications.
 
-### 🔥 Featured Projects
+### 🔥 Currently Working On
+![Activity Tags](activity-tags.svg)
+
+### 🚀 Featured Projects
 ![Project Showcase](project-showcase.svg)
 
 ### 🛠️ Technical Skills
