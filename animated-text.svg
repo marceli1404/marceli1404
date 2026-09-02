@@ -1,42 +1,20 @@
 <svg width="500" height="60" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .main-text {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 28px;
-      font-weight: bold;
-      fill: url(#gradient);
-      animation: gradientShift 3s ease infinite;
-    }
-    .sub-text {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 16px;
-      fill: #666;
-      margin-top: 10px;
-    }
-    @keyframes gradientShift {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-    .gradient-stop-1 { stop-color: #4facfe; }
-    .gradient-stop-2 { stop-color: #00f2fe; }
-    .gradient-stop-3 { stop-color: #43e97b; }
-    .gradient-stop-4 { stop-color: #38f9d7; }
-  </style>
   <defs>
     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" class="gradient-stop-1" />
-      <stop offset="33%" class="gradient-stop-2" />
-      <stop offset="66%" class="gradient-stop-3" />
-      <stop offset="100%" class="gradient-stop-4" />
+      <stop offset="0%" stop-color="#4facfe">
+        <animate attributeName="stop-color" values="#4facfe;#00f2fe;#43e97b;#38f9d7;#4facfe" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="33%" stop-color="#00f2fe">
+        <animate attributeName="stop-color" values="#00f2fe;#43e97b;#38f9d7;#4facfe;#00f2fe" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="66%" stop-color="#43e97b">
+        <animate attributeName="stop-color" values="#43e97b;#38f9d7;#4facfe;#00f2fe;#43e97b" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#38f9d7">
+        <animate attributeName="stop-color" values="#38f9d7;#4facfe;#00f2fe;#43e97b;#38f9d7" dur="4s" repeatCount="indefinite"/>
+      </stop>
     </linearGradient>
   </defs>
-  <text class="main-text" x="0" y="35">marceli1404</text>
-  <text class="sub-text" x="0" y="55">AI Engineer & Open Source Developer</text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="28" font-weight="bold" fill="url(#gradient)" x="0" y="35">marceli1404</text>
+  <text font-family="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" font-size="16" fill="#666" x="0" y="55">AI Engineer & Open Source Developer</text>
 </svg>
