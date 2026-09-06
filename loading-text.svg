@@ -1,7 +1,0 @@
-<svg width="500" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <text font-family="Courier New, Courier, monospace" font-size="16" fill="#0f0" x="0" y="20">
-    Marceli is building the future of AI-assisted development...
-    <tspan id="cursor">_</tspan>
-  </text>
-  <animate xlink:href="#cursor" attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
-</svg>

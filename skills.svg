@@ -1,0 +1,75 @@
+<svg width="850" height="290" viewBox="0 0 850 290" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Technical skills">
+  <defs>
+    <linearGradient id="sSurface" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1621"/>
+      <stop offset="1" stop-color="#0b1017"/>
+    </linearGradient>
+    <linearGradient id="sFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4facfe"/>
+      <stop offset="1" stop-color="#00f2fe"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .t     { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .label { font-size: 14.5px; font-weight: 600; fill: #e8eef5; }
+    .pct   { font-size: 13px; font-weight: 500; fill: #8b98a9; text-anchor: end; }
+    .track { fill: #232c3a; }
+
+    .row   { opacity: 1; }
+    .bar   { transform: scaleX(1); transform-box: fill-box; transform-origin: left center; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .row { opacity: 0; animation: sIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      .bar { transform: scaleX(0); animation: sGrow 1s cubic-bezier(0.65, 0, 0.35, 1) both; }
+      .r0 { animation-delay: 0.06s; }  .b0 { animation-delay: 0.18s; }
+      .r1 { animation-delay: 0.14s; }  .b1 { animation-delay: 0.26s; }
+      .r2 { animation-delay: 0.22s; }  .b2 { animation-delay: 0.34s; }
+      .r3 { animation-delay: 0.30s; }  .b3 { animation-delay: 0.42s; }
+      .r4 { animation-delay: 0.38s; }  .b4 { animation-delay: 0.50s; }
+      .r5 { animation-delay: 0.46s; }  .b5 { animation-delay: 0.58s; }
+    }
+
+    @keyframes sIn   { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes sGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  </style>
+
+  <rect x="0.5" y="0.5" width="849" height="289" rx="18" fill="url(#sSurface)" stroke="#222c39"/>
+
+  <g class="row r0">
+    <text class="t label" x="34" y="44">JavaScript / TypeScript</text>
+    <rect class="track" x="224" y="34" width="560" height="12" rx="6"/>
+    <rect class="bar b0" x="224" y="34" width="504" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="44">90%</text>
+  </g>
+  <g class="row r1">
+    <text class="t label" x="34" y="86">Python</text>
+    <rect class="track" x="224" y="76" width="560" height="12" rx="6"/>
+    <rect class="bar b1" x="224" y="76" width="476" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="86">85%</text>
+  </g>
+  <g class="row r2">
+    <text class="t label" x="34" y="128">AI agent frameworks</text>
+    <rect class="track" x="224" y="118" width="560" height="12" rx="6"/>
+    <rect class="bar b2" x="224" y="118" width="493" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="128">88%</text>
+  </g>
+  <g class="row r3">
+    <text class="t label" x="34" y="170">Automation &amp; tooling</text>
+    <rect class="track" x="224" y="160" width="560" height="12" rx="6"/>
+    <rect class="bar b3" x="224" y="160" width="459" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="170">82%</text>
+  </g>
+  <g class="row r4">
+    <text class="t label" x="34" y="212">PowerShell / Bash</text>
+    <rect class="track" x="224" y="202" width="560" height="12" rx="6"/>
+    <rect class="bar b4" x="224" y="202" width="403" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="212">72%</text>
+  </g>
+  <g class="row r5">
+    <text class="t label" x="34" y="254">Cloud &amp; DevOps</text>
+    <rect class="track" x="224" y="244" width="560" height="12" rx="6"/>
+    <rect class="bar b5" x="224" y="244" width="381" height="12" rx="6" fill="url(#sFill)"/>
+    <text class="t pct" x="816" y="254">68%</text>
+  </g>
+</svg>

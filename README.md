@@ -1,40 +1,40 @@
-![Animated Title](animated-text.svg)
+<img src="header.svg" width="100%" alt="Marceli — AI Engineer & Open Source Developer" />
 
-# Marceli
+### About
 
-## AI Engineer & Open Source Developer
+Passionate AI engineer and open-source developer focused on AI agent development, automation systems, and developer tooling. I build practical solutions that bridge cutting-edge AI and real-world workflows.
 
-![Loading Effect](loading-text.svg)
+### 🔭 Currently working on
 
-[![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/marceli1404)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?logo=linkedin)](https://linkedin.com/in/marceli1404)
-[![Twitter](https://img.shields.io/twitter/follow/marceli1404?style=social)](https://twitter.com/marceli1404)
+<img src="focus.svg" width="100%" alt="Current focus areas" />
 
-### About Me
-Passionate AI engineer and open source developer specializing in AI agent development, automation systems, and developer tools. I build practical solutions that bridge the gap between cutting-edge AI technologies and real-world applications.
+### 🚀 Featured projects
 
-### 🔥 Currently Working On
-![Activity Tags](activity-tags.svg)
+<img src="projects.svg" width="100%" alt="Featured projects" />
 
-### 🚀 Featured Projects
-![Project Showcase](project-showcase.svg)
+### 🛠️ Skills
 
-### 🛠️ Technical Skills
-![Skill Bars](skill-bars.svg)
+<img src="skills.svg" width="100%" alt="Technical skills" />
 
-### 📈 Recent Activity
-![Recent Activity](recent-activity.svg)
+### 📈 Recent activity
 
-### 📊 GitHub Stats
-![marceli1404's GitHub stats](https://github-readme-stats.vercel.app/api?username=marceli1404&show_icons=true&theme=radical)
+<img src="activity.svg" width="100%" alt="Recent activity" />
 
-### 🏆 Recent Achievements
-- Built mobile interface for OpenCode AI agent accessible via GitHub Codespaces
-- Created proxy enabling OpenAI Codex to work with open models
-- Developed comprehensive automation suite for browser and email workflows
-- Active contributor to open source AI developer tools ecosystem
+### 📊 GitHub stats
 
-### 🤝 Let's Connect
-I'm always interested in collaborating on AI projects, automation tools, and open source developer utilities. Feel free to reach out!
+<img src="https://github-readme-stats.vercel.app/api?username=marceli1404&show_icons=true&theme=radical" alt="marceli1404's GitHub stats" />
 
-*"Building the future of AI-assisted development, one open source project at a time."*
+### 🏆 Recent achievements
+
+- Built a mobile interface for the OpenCode AI agent, accessible via GitHub Codespaces
+- Created a proxy enabling OpenAI Codex to work with open-weight models
+- Developed a comprehensive automation suite for browser and email workflows
+- Active contributor to the open-source AI developer-tools ecosystem
+
+### 🤝 Connect
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/marceli1404)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/marceli1404)
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?logo=twitter&logoColor=white)](https://twitter.com/marceli1404)
+
+<sub><i>Building the future of AI-assisted development, one open source project at a time.</i></sub>

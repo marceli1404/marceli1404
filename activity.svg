@@ -1,0 +1,116 @@
+<svg width="850" height="176" viewBox="0 0 850 176" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Recent activity">
+  <defs>
+    <linearGradient id="aSurface" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1621"/>
+      <stop offset="1" stop-color="#0b1017"/>
+    </linearGradient>
+    <linearGradient id="aBar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#4facfe"/>
+      <stop offset="1" stop-color="#00f2fe"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .t     { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .bar   { fill: url(#aBar); transform: scaleY(1); transform-box: fill-box; transform-origin: bottom; }
+    .cap   { font-size: 13.5px; font-weight: 500; fill: #e8eef5; opacity: 1; }
+    .sub   { font-size: 11.5px; font-weight: 400; fill: #8b98a9; opacity: 1; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .bar { transform: scaleY(0); animation: aGrow 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      .cap { opacity: 0; animation: aFade 0.6s ease-out 0.9s both; }
+      .sub { opacity: 0; animation: aFade 0.6s ease-out 1.02s both; }
+  .bars rect:nth-of-type(1) { animation-delay: 40ms; }
+  .bars rect:nth-of-type(2) { animation-delay: 58ms; }
+  .bars rect:nth-of-type(3) { animation-delay: 76ms; }
+  .bars rect:nth-of-type(4) { animation-delay: 94ms; }
+  .bars rect:nth-of-type(5) { animation-delay: 112ms; }
+  .bars rect:nth-of-type(6) { animation-delay: 130ms; }
+  .bars rect:nth-of-type(7) { animation-delay: 148ms; }
+  .bars rect:nth-of-type(8) { animation-delay: 166ms; }
+  .bars rect:nth-of-type(9) { animation-delay: 184ms; }
+  .bars rect:nth-of-type(10) { animation-delay: 202ms; }
+  .bars rect:nth-of-type(11) { animation-delay: 220ms; }
+  .bars rect:nth-of-type(12) { animation-delay: 238ms; }
+  .bars rect:nth-of-type(13) { animation-delay: 256ms; }
+  .bars rect:nth-of-type(14) { animation-delay: 274ms; }
+  .bars rect:nth-of-type(15) { animation-delay: 292ms; }
+  .bars rect:nth-of-type(16) { animation-delay: 310ms; }
+  .bars rect:nth-of-type(17) { animation-delay: 328ms; }
+  .bars rect:nth-of-type(18) { animation-delay: 346ms; }
+  .bars rect:nth-of-type(19) { animation-delay: 364ms; }
+  .bars rect:nth-of-type(20) { animation-delay: 382ms; }
+  .bars rect:nth-of-type(21) { animation-delay: 400ms; }
+  .bars rect:nth-of-type(22) { animation-delay: 418ms; }
+  .bars rect:nth-of-type(23) { animation-delay: 436ms; }
+  .bars rect:nth-of-type(24) { animation-delay: 454ms; }
+  .bars rect:nth-of-type(25) { animation-delay: 472ms; }
+  .bars rect:nth-of-type(26) { animation-delay: 490ms; }
+  .bars rect:nth-of-type(27) { animation-delay: 508ms; }
+  .bars rect:nth-of-type(28) { animation-delay: 526ms; }
+  .bars rect:nth-of-type(29) { animation-delay: 544ms; }
+  .bars rect:nth-of-type(30) { animation-delay: 562ms; }
+  .bars rect:nth-of-type(31) { animation-delay: 580ms; }
+  .bars rect:nth-of-type(32) { animation-delay: 598ms; }
+  .bars rect:nth-of-type(33) { animation-delay: 616ms; }
+  .bars rect:nth-of-type(34) { animation-delay: 634ms; }
+  .bars rect:nth-of-type(35) { animation-delay: 652ms; }
+  .bars rect:nth-of-type(36) { animation-delay: 670ms; }
+  .bars rect:nth-of-type(37) { animation-delay: 688ms; }
+  .bars rect:nth-of-type(38) { animation-delay: 706ms; }
+  .bars rect:nth-of-type(39) { animation-delay: 724ms; }
+  .bars rect:nth-of-type(40) { animation-delay: 742ms; }
+    }
+
+    @keyframes aGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes aFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+
+  <rect x="0.5" y="0.5" width="849" height="175" rx="18" fill="url(#aSurface)" stroke="#222c39"/>
+
+  <g class="bars">
+    <rect class="bar" x="34.0" y="102" width="13" height="14" rx="3"/>
+    <rect class="bar" x="53.7" y="88" width="13" height="28" rx="3"/>
+    <rect class="bar" x="73.4" y="96" width="13" height="20" rx="3"/>
+    <rect class="bar" x="93.1" y="74" width="13" height="42" rx="3"/>
+    <rect class="bar" x="112.8" y="86" width="13" height="30" rx="3"/>
+    <rect class="bar" x="132.5" y="61" width="13" height="55" rx="3"/>
+    <rect class="bar" x="152.2" y="78" width="13" height="38" rx="3"/>
+    <rect class="bar" x="171.9" y="94" width="13" height="22" rx="3"/>
+    <rect class="bar" x="191.6" y="68" width="13" height="48" rx="3"/>
+    <rect class="bar" x="211.3" y="56" width="13" height="60" rx="3"/>
+    <rect class="bar" x="231.0" y="81" width="13" height="35" rx="3"/>
+    <rect class="bar" x="250.7" y="91" width="13" height="25" rx="3"/>
+    <rect class="bar" x="270.4" y="72" width="13" height="44" rx="3"/>
+    <rect class="bar" x="290.1" y="64" width="13" height="52" rx="3"/>
+    <rect class="bar" x="309.8" y="86" width="13" height="30" rx="3"/>
+    <rect class="bar" x="329.5" y="98" width="13" height="18" rx="3"/>
+    <rect class="bar" x="349.2" y="76" width="13" height="40" rx="3"/>
+    <rect class="bar" x="368.9" y="58" width="13" height="58" rx="3"/>
+    <rect class="bar" x="388.6" y="50" width="13" height="66" rx="3"/>
+    <rect class="bar" x="408.3" y="71" width="13" height="45" rx="3"/>
+    <rect class="bar" x="428.0" y="84" width="13" height="32" rx="3"/>
+    <rect class="bar" x="447.7" y="66" width="13" height="50" rx="3"/>
+    <rect class="bar" x="467.4" y="78" width="13" height="38" rx="3"/>
+    <rect class="bar" x="487.1" y="88" width="13" height="28" rx="3"/>
+    <rect class="bar" x="506.8" y="62" width="13" height="54" rx="3"/>
+    <rect class="bar" x="526.5" y="54" width="13" height="62" rx="3"/>
+    <rect class="bar" x="546.2" y="76" width="13" height="40" rx="3"/>
+    <rect class="bar" x="565.9" y="86" width="13" height="30" rx="3"/>
+    <rect class="bar" x="585.6" y="70" width="13" height="46" rx="3"/>
+    <rect class="bar" x="605.3" y="58" width="13" height="58" rx="3"/>
+    <rect class="bar" x="625.0" y="80" width="13" height="36" rx="3"/>
+    <rect class="bar" x="644.7" y="92" width="13" height="24" rx="3"/>
+    <rect class="bar" x="664.4" y="74" width="13" height="42" rx="3"/>
+    <rect class="bar" x="684.1" y="60" width="13" height="56" rx="3"/>
+    <rect class="bar" x="703.8" y="52" width="13" height="64" rx="3"/>
+    <rect class="bar" x="723.5" y="68" width="13" height="48" rx="3"/>
+    <rect class="bar" x="743.2" y="82" width="13" height="34" rx="3"/>
+    <rect class="bar" x="762.9" y="64" width="13" height="52" rx="3"/>
+    <rect class="bar" x="782.6" y="56" width="13" height="60" rx="3"/>
+    <rect class="bar" x="802.3" y="72" width="13" height="44" rx="3"/>
+  </g>
+
+  <text class="t cap" x="34" y="146">Consistently shipping across AI-agent and automation projects.</text>
+  <text class="t sub" x="34" y="164">Activity over the last 40 days</text>
+</svg>
