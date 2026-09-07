@@ -1,0 +1,174 @@
+<svg width="850" height="1252" viewBox="0 0 850 1252" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Marceli â AI Engineer and Open Source Developer">
+  <defs>
+    <linearGradient id="surf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#0a0e14"/>
+    </linearGradient>
+    <linearGradient id="grn" x1="0" y1="0" x2="1" y2="0.3" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#26a641"/>
+      <stop offset="0.55" stop-color="#39d353"/>
+      <stop offset="1" stop-color="#56d364"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-0.05 0; 0.05 0; -0.05 0" keyTimes="0;0.5;1" dur="12s" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1" repeatCount="indefinite"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .t      { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .nm     { font-size: 56px; font-weight: 800; letter-spacing: -2px; fill: url(#grn); }
+    .role   { font-size: 20px; font-weight: 600; fill: #e6edf3; }
+    .tag    { font-size: 14px; font-style: italic; fill: #7d8590; }
+    .lbl    { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: #7d8590; }
+    .body   { font-size: 13.5px; fill: #c9d1d9; }
+    .chip   { font-size: 14px; font-weight: 500; fill: #e6edf3; }
+    .ctitle { font-size: 15px; font-weight: 700; fill: #e6edf3; }
+    .cdesc  { font-size: 12px; fill: #7d8590; }
+    .ctag   { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; fill: #3fb950; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .sk     { font-size: 14px; font-weight: 600; fill: #e6edf3; }
+    .pct    { font-size: 12.5px; font-weight: 500; fill: #7d8590; text-anchor: end; }
+    .cap    { font-size: 13px; font-weight: 500; fill: #e6edf3; }
+    .sub    { font-size: 11px; fill: #7d8590; }
+
+    .r  { opacity: 1; }
+    .p  { opacity: 1; transform: scale(1); transform-box: fill-box; transform-origin: center; }
+    .gx { transform: scaleX(1); transform-box: fill-box; transform-origin: left center; }
+    .gy { transform: scaleY(1); transform-box: fill-box; transform-origin: bottom; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .r  { opacity: 0; animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      .p  { opacity: 0; transform: scale(0.9); animation: pop 0.5s cubic-bezier(0.34, 1.45, 0.64, 1) both; }
+      .gx { transform: scaleX(0); animation: gx 0.9s cubic-bezier(0.65, 0, 0.35, 1) both; }
+      .gy { transform: scaleY(0); animation: gy 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      .d0 { animation-delay: 50ms; }
+      .d1 { animation-delay: 190ms; }
+      .d2 { animation-delay: 320ms; }
+      .d3 { animation-delay: 440ms; }
+      .d4 { animation-delay: 520ms; }
+      .d5 { animation-delay: 540ms; }
+      .d6 { animation-delay: 560ms; }
+      .d7 { animation-delay: 650ms; }
+      .d8 { animation-delay: 710ms; }
+      .d9 { animation-delay: 770ms; }
+      .d10 { animation-delay: 790ms; }
+      .d11 { animation-delay: 810ms; }
+      .d12 { animation-delay: 830ms; }
+      .d13 { animation-delay: 928ms; }
+      .d14 { animation-delay: 1000ms; }
+      .d15 { animation-delay: 1072ms; }
+      .d16 { animation-delay: 1144ms; }
+      .d17 { animation-delay: 1216ms; }
+      .d18 { animation-delay: 1110ms; }
+      .d19 { animation-delay: 1130ms; }
+      .d20 { animation-delay: 1150ms; }
+      .d21 { animation-delay: 1240ms; }
+      .d22 { animation-delay: 1335ms; }
+      .d23 { animation-delay: 1430ms; }
+      .d24 { animation-delay: 1480ms; }
+      .d25 { animation-delay: 1500ms; }
+      .d26 { animation-delay: 1520ms; }
+      .d27 { animation-delay: 1600ms; }
+      .d28 { animation-delay: 1720ms; }
+      .d29 { animation-delay: 1655ms; }
+      .d30 { animation-delay: 1790ms; }
+      .d31 { animation-delay: 1710ms; }
+      .d32 { animation-delay: 1860ms; }
+      .d33 { animation-delay: 1765ms; }
+      .d34 { animation-delay: 1930ms; }
+      .d35 { animation-delay: 1820ms; }
+      .d36 { animation-delay: 2000ms; }
+      .d37 { animation-delay: 1875ms; }
+      .d38 { animation-delay: 2070ms; }
+      .d39 { animation-delay: 2010ms; }
+      .d40 { animation-delay: 2030ms; }
+      .d41 { animation-delay: 2050ms; }
+      .d42 { animation-delay: 2130ms; }
+      .d43 { animation-delay: 2144ms; }
+      .d44 { animation-delay: 2158ms; }
+      .d45 { animation-delay: 2172ms; }
+      .d46 { animation-delay: 2186ms; }
+      .d47 { animation-delay: 2200ms; }
+      .d48 { animation-delay: 2214ms; }
+      .d49 { animation-delay: 2228ms; }
+      .d50 { animation-delay: 2242ms; }
+      .d51 { animation-delay: 2256ms; }
+      .d52 { animation-delay: 2270ms; }
+      .d53 { animation-delay: 2284ms; }
+      .d54 { animation-delay: 2298ms; }
+      .d55 { animation-delay: 2312ms; }
+      .d56 { animation-delay: 2326ms; }
+      .d57 { animation-delay: 2340ms; }
+      .d58 { animation-delay: 2354ms; }
+      .d59 { animation-delay: 2368ms; }
+      .d60 { animation-delay: 2382ms; }
+      .d61 { animation-delay: 2396ms; }
+      .d62 { animation-delay: 2410ms; }
+      .d63 { animation-delay: 2424ms; }
+      .d64 { animation-delay: 2438ms; }
+      .d65 { animation-delay: 2452ms; }
+      .d66 { animation-delay: 2466ms; }
+      .d67 { animation-delay: 2480ms; }
+      .d68 { animation-delay: 2494ms; }
+      .d69 { animation-delay: 2508ms; }
+      .d70 { animation-delay: 2522ms; }
+      .d71 { animation-delay: 2536ms; }
+      .d72 { animation-delay: 2550ms; }
+      .d73 { animation-delay: 2564ms; }
+      .d74 { animation-delay: 2578ms; }
+      .d75 { animation-delay: 2592ms; }
+      .d76 { animation-delay: 2606ms; }
+      .d77 { animation-delay: 2620ms; }
+      .d78 { animation-delay: 2634ms; }
+      .d79 { animation-delay: 2648ms; }
+      .d80 { animation-delay: 2662ms; }
+      .d81 { animation-delay: 2676ms; }
+      .d82 { animation-delay: 2760ms; }
+      .d83 { animation-delay: 2860ms; }
+    }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pop  { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes gx   { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes gy   { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  </style>
+
+  <rect x="1" y="1" width="848" height="1250" rx="20" fill="url(#surf)" stroke="#30363d"/>
+
+  <text class="t nm r d0" x="34" y="100">Marceli</text>
+  <rect class="gx d1" x="36" y="118" width="300" height="5" rx="2.5" fill="url(#grn)"/>
+  <text class="t role r d2" x="36" y="158">AI Engineer &#160;&#183;&#160; Open Source Developer</text>
+  <text class="t tag r d3" x="36" y="184">Building the future of AI-assisted development, one open source project at a time.</text>
+  <line class="r d4" x1="34" y1="222" x2="816" y2="222" stroke="#21262d"/>
+  <rect class="p d5" x="34" y="242" width="13" height="13" rx="3" fill="url(#grn)"/>
+  <text class="t lbl r d6" x="56" y="253">ABOUT</text>
+  <text class="t body r d7" x="34" y="292">Passionate AI engineer and open-source developer focused on AI agent development,</text>
+  <text class="t body r d8" x="34" y="315">automation systems, and developer tooling. I build practical solutions that bridge</text>
+  <text class="t body r d9" x="34" y="338">cutting-edge AI and real-world workflows.</text>
+  <line class="r d10" x1="34" y1="360" x2="816" y2="360" stroke="#21262d"/>
+  <rect class="p d11" x="34" y="380" width="13" height="13" rx="3" fill="url(#grn)"/>
+  <text class="t lbl r d12" x="56" y="391">CURRENTLY WORKING ON</text>
+  <g transform="translate(34,404)"><g class="p d13"><rect x="0" y="0" width="128" height="40" rx="20" fill="#161b22" stroke="#3fb950" stroke-opacity="0.45"/><circle cx="21" cy="20" r="4" fill="#3fb950"/><text class="t chip" x="36" y="25">AI agents</text></g></g>
+  <g transform="translate(174,404)"><g class="p d14"><rect x="0" y="0" width="250" height="40" rx="20" fill="#161b22" stroke="#3fb950" stroke-opacity="0.45"/><circle cx="21" cy="20" r="4" fill="#3fb950"/><text class="t chip" x="36" y="25">Codex &#8596; open-model proxy</text></g></g>
+  <g transform="translate(436,404)"><g class="p d15"><rect x="0" y="0" width="210" height="40" rx="20" fill="#161b22" stroke="#3fb950" stroke-opacity="0.45"/><circle cx="21" cy="20" r="4" fill="#3fb950"/><text class="t chip" x="36" y="25">Mobile agent interfaces</text></g></g>
+  <g transform="translate(34,456)"><g class="p d16"><rect x="0" y="0" width="262" height="40" rx="20" fill="#161b22" stroke="#3fb950" stroke-opacity="0.45"/><circle cx="21" cy="20" r="4" fill="#3fb950"/><text class="t chip" x="36" y="25">Browser &amp; email automation</text></g></g>
+  <g transform="translate(308,456)"><g class="p d17"><rect x="0" y="0" width="220" height="40" rx="20" fill="#161b22" stroke="#3fb950" stroke-opacity="0.45"/><circle cx="21" cy="20" r="4" fill="#3fb950"/><text class="t chip" x="36" y="25">Open-source dev tooling</text></g></g>
+  <line class="r d18" x1="34" y1="512" x2="816" y2="512" stroke="#21262d"/>
+  <rect class="p d19" x="34" y="532" width="13" height="13" rx="3" fill="url(#grn)"/>
+  <text class="t lbl r d20" x="56" y="543">FEATURED PROJECTS</text>
+  <g transform="translate(34,554)"><g class="r d21"><rect x="0" y="0" width="246" height="150" rx="13" fill="#161b22" stroke="#30363d"/><rect x="20" y="20" width="34" height="4" rx="2" fill="url(#grn)"/><text class="t ctitle" x="20" y="50">OpenCode Mobile</text><text class="t cdesc" x="20" y="74">Mobile interface for the</text><text class="t cdesc" x="20" y="91">OpenCode AI agent, driven</text><text class="t cdesc" x="20" y="108">from GitHub Codespaces.</text><rect x="20" y="115" width="96" height="21" rx="10.5" fill="#3fb950" fill-opacity="0.15"/><text class="ctag" x="31" y="129">AI &#183; MOBILE</text></g></g>
+  <g transform="translate(302,554)"><g class="r d22"><rect x="0" y="0" width="246" height="150" rx="13" fill="#161b22" stroke="#30363d"/><rect x="20" y="20" width="34" height="4" rx="2" fill="url(#grn)"/><text class="t ctitle" x="20" y="50">Codex Open Proxy</text><text class="t cdesc" x="20" y="74">Proxy that lets OpenAI</text><text class="t cdesc" x="20" y="91">Codex run against</text><text class="t cdesc" x="20" y="108">open-weight models.</text><rect x="20" y="115" width="112" height="21" rx="10.5" fill="#3fb950" fill-opacity="0.15"/><text class="ctag" x="31" y="129">LLM &#183; TOOLING</text></g></g>
+  <g transform="translate(570,554)"><g class="r d23"><rect x="0" y="0" width="246" height="150" rx="13" fill="#161b22" stroke="#30363d"/><rect x="20" y="20" width="34" height="4" rx="2" fill="url(#grn)"/><text class="t ctitle" x="20" y="50">Automation Suite</text><text class="t cdesc" x="20" y="74">Browser and email</text><text class="t cdesc" x="20" y="91">workflow automation for</text><text class="t cdesc" x="20" y="108">everyday dev tasks.</text><rect x="20" y="115" width="100" height="21" rx="10.5" fill="#3fb950" fill-opacity="0.15"/><text class="ctag" x="31" y="129">AUTOMATION</text></g></g>
+  <line class="r d24" x1="34" y1="736" x2="816" y2="736" stroke="#21262d"/>
+  <rect class="p d25" x="34" y="756" width="13" height="13" rx="3" fill="url(#grn)"/>
+  <text class="t lbl r d26" x="56" y="767">SKILLS</text>
+  <g class="r d27"><text class="t sk" x="34" y="792">JavaScript / TypeScript</text><rect x="242" y="782" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d28" x="242" y="782" width="516" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="792">90%</text></g>
+  <g class="r d29"><text class="t sk" x="34" y="832">Python</text><rect x="242" y="822" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d30" x="242" y="822" width="487" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="832">85%</text></g>
+  <g class="r d31"><text class="t sk" x="34" y="872">AI agent frameworks</text><rect x="242" y="862" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d32" x="242" y="862" width="505" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="872">88%</text></g>
+  <g class="r d33"><text class="t sk" x="34" y="912">Automation &amp; tooling</text><rect x="242" y="902" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d34" x="242" y="902" width="470" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="912">82%</text></g>
+  <g class="r d35"><text class="t sk" x="34" y="952">PowerShell / Bash</text><rect x="242" y="942" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d36" x="242" y="942" width="413" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="952">72%</text></g>
+  <g class="r d37"><text class="t sk" x="34" y="992">Cloud &amp; DevOps</text><rect x="242" y="982" width="574" height="12" rx="6" fill="#21262d"/><rect class="gx d38" x="242" y="982" width="390" height="12" rx="6" fill="url(#grn)"/><text class="t pct" x="816" y="992">68%</text></g>
+  <line class="r d39" x1="34" y1="1028" x2="816" y2="1028" stroke="#21262d"/>
+  <rect class="p d40" x="34" y="1048" width="13" height="13" rx="3" fill="url(#grn)"/>
+  <text class="t lbl r d41" x="56" y="1059">RECENT ACTIVITY</text>
+  <rect class="gy d42" x="34.0" y="1162" width="13.2" height="14" rx="3" fill="#0e4429"/><rect class="gy d43" x="53.5" y="1148" width="13.2" height="28" rx="3" fill="#006d32"/><rect class="gy d44" x="73.1" y="1156" width="13.2" height="20" rx="3" fill="#0e4429"/><rect class="gy d45" x="92.7" y="1134" width="13.2" height="42" rx="3" fill="#26a641"/><rect class="gy d46" x="112.2" y="1146" width="13.2" height="30" rx="3" fill="#006d32"/><rect class="gy d47" x="131.8" y="1121" width="13.2" height="55" rx="3" fill="#39d353"/><rect class="gy d48" x="151.3" y="1138" width="13.2" height="38" rx="3" fill="#006d32"/><rect class="gy d49" x="170.8" y="1154" width="13.2" height="22" rx="3" fill="#0e4429"/><rect class="gy d50" x="190.4" y="1128" width="13.2" height="48" rx="3" fill="#26a641"/><rect class="gy d51" x="210.0" y="1116" width="13.2" height="60" rx="3" fill="#39d353"/><rect class="gy d52" x="229.5" y="1141" width="13.2" height="35" rx="3" fill="#006d32"/><rect class="gy d53" x="249.1" y="1151" width="13.2" height="25" rx="3" fill="#0e4429"/><rect class="gy d54" x="268.6" y="1132" width="13.2" height="44" rx="3" fill="#26a641"/><rect class="gy d55" x="288.1" y="1124" width="13.2" height="52" rx="3" fill="#26a641"/><rect class="gy d56" x="307.7" y="1146" width="13.2" height="30" rx="3" fill="#006d32"/><rect class="gy d57" x="327.2" y="1158" width="13.2" height="18" rx="3" fill="#0e4429"/><rect class="gy d58" x="346.8" y="1136" width="13.2" height="40" rx="3" fill="#26a641"/><rect class="gy d59" x="366.4" y="1118" width="13.2" height="58" rx="3" fill="#39d353"/><rect class="gy d60" x="385.9" y="1110" width="13.2" height="66" rx="3" fill="#39d353"/><rect class="gy d61" x="405.4" y="1131" width="13.2" height="45" rx="3" fill="#26a641"/><rect class="gy d62" x="425.0" y="1144" width="13.2" height="32" rx="3" fill="#006d32"/><rect class="gy d63" x="444.6" y="1126" width="13.2" height="50" rx="3" fill="#26a641"/><rect class="gy d64" x="464.1" y="1138" width="13.2" height="38" rx="3" fill="#006d32"/><rect class="gy d65" x="483.7" y="1148" width="13.2" height="28" rx="3" fill="#006d32"/><rect class="gy d66" x="503.2" y="1122" width="13.2" height="54" rx="3" fill="#39d353"/><rect class="gy d67" x="522.8" y="1114" width="13.2" height="62" rx="3" fill="#39d353"/><rect class="gy d68" x="542.3" y="1136" width="13.2" height="40" rx="3" fill="#26a641"/><rect class="gy d69" x="561.9" y="1146" width="13.2" height="30" rx="3" fill="#006d32"/><rect class="gy d70" x="581.4" y="1130" width="13.2" height="46" rx="3" fill="#26a641"/><rect class="gy d71" x="601.0" y="1118" width="13.2" height="58" rx="3" fill="#39d353"/><rect class="gy d72" x="620.5" y="1140" width="13.2" height="36" rx="3" fill="#006d32"/><rect class="gy d73" x="640.1" y="1152" width="13.2" height="24" rx="3" fill="#0e4429"/><rect class="gy d74" x="659.6" y="1134" width="13.2" height="42" rx="3" fill="#26a641"/><rect class="gy d75" x="679.1" y="1120" width="13.2" height="56" rx="3" fill="#39d353"/><rect class="gy d76" x="698.7" y="1112" width="13.2" height="64" rx="3" fill="#39d353"/><rect class="gy d77" x="718.2" y="1128" width="13.2" height="48" rx="3" fill="#26a641"/><rect class="gy d78" x="737.8" y="1142" width="13.2" height="34" rx="3" fill="#006d32"/><rect class="gy d79" x="757.4" y="1124" width="13.2" height="52" rx="3" fill="#26a641"/><rect class="gy d80" x="776.9" y="1116" width="13.2" height="60" rx="3" fill="#39d353"/><rect class="gy d81" x="796.5" y="1132" width="13.2" height="44" rx="3" fill="#26a641"/>
+  <text class="t cap r d82" x="34" y="1206">Consistently shipping across AI-agent and automation projects.</text>
+  <text class="t sub r d83" x="34" y="1224">Activity over the last 40 days</text>
+</svg>
