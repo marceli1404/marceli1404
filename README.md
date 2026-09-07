@@ -1,7 +1,5 @@
-<h1 align="center">Hi, I'm Marceli 👋</h1>
-
 <p align="center">
-  I build developer tools, browser &amp; email automation, and AI-agent integrations.
+  <img src="header.svg" alt="Marceli — builds developer tools, automation and AI-agent integrations" width="820" />
 </p>
 
 <p align="center">

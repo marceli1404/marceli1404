@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 244" width="820" height="244" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" role="img" aria-label="Marceli — builds developer tools, automation and AI-agent integrations. Stack: JavaScript, TypeScript, Node.js, PowerShell, Playwright, Cloudflare.">
+  <defs>
+    <linearGradient id="sheen" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="260" y2="0">
+      <stop offset="0" stop-color="#2ea043"/>
+      <stop offset="0.5" stop-color="#b7ffc4"/>
+      <stop offset="1" stop-color="#2ea043"/>
+      <animateTransform attributeName="gradientTransform" type="translate" from="-300 0" to="900 0" dur="4.5s" repeatCount="indefinite"/>
+    </linearGradient>
+
+    <mask id="m1"><rect x="36" y="72" width="0" height="26" fill="#fff">
+      <animate attributeName="width" values="0;0;120;120;120" keyTimes="0;0.05;0.145;0.985;1" dur="11s" repeatCount="indefinite"/>
+    </rect></mask>
+    <mask id="m2"><rect x="36" y="108" width="0" height="30" fill="#fff">
+      <animate attributeName="width" values="0;0;660;660;660" keyTimes="0;0.18;0.38;0.985;1" dur="11s" repeatCount="indefinite"/>
+    </rect></mask>
+    <mask id="m3"><rect x="36" y="150" width="0" height="26" fill="#fff">
+      <animate attributeName="width" values="0;0;185;185;185" keyTimes="0;0.42;0.52;0.985;1" dur="11s" repeatCount="indefinite"/>
+    </rect></mask>
+    <mask id="m4"><rect x="36" y="186" width="0" height="26" fill="#fff">
+      <animate attributeName="width" values="0;0;655;655;655" keyTimes="0;0.555;0.72;0.985;1" dur="11s" repeatCount="indefinite"/>
+    </rect></mask>
+  </defs>
+
+  <!-- window -->
+  <rect x="1" y="1" width="818" height="242" rx="14" fill="#0d1117" stroke="#30363d" stroke-width="1.5"/>
+
+  <!-- title bar -->
+  <circle cx="30" cy="27" r="6" fill="#ff5f56"/>
+  <circle cx="50" cy="27" r="6" fill="#ffbd2e"/>
+  <circle cx="70" cy="27" r="6" fill="#27c93f"/>
+  <text x="410" y="31" text-anchor="middle" font-size="13" fill="#6e7681">marceli1404 — zsh</text>
+  <line x1="1" y1="48" x2="819" y2="48" stroke="#21262d" stroke-width="1.5"/>
+
+  <!-- line 1: prompt + command -->
+  <g mask="url(#m1)" font-size="15">
+    <text x="36" y="91"><tspan fill="#39d353">➜</tspan>  <tspan fill="#58a6ff">~</tspan> <tspan fill="#c9d1d9">whoami</tspan></text>
+  </g>
+
+  <!-- line 2: hero output (animated sheen) -->
+  <g mask="url(#m2)" font-size="18" font-weight="700">
+    <text x="36" y="130" fill="url(#sheen)">Marceli · developer tools, automation &amp; AI-agent integrations</text>
+  </g>
+
+  <!-- line 3: prompt + command -->
+  <g mask="url(#m3)" font-size="15">
+    <text x="36" y="169"><tspan fill="#39d353">➜</tspan>  <tspan fill="#58a6ff">~</tspan> <tspan fill="#c9d1d9">cat stack.txt</tspan></text>
+  </g>
+
+  <!-- line 4: output -->
+  <g mask="url(#m4)" font-size="15">
+    <text x="36" y="205" fill="#8b949e">JavaScript · TypeScript · Node.js · PowerShell · Playwright · Cloudflare</text>
+  </g>
+
+  <!-- blinking cursor -->
+  <rect x="695" y="192" width="9" height="17" fill="#39d353">
+    <animate attributeName="opacity" values="0;0;1;0;1;0;1;0;1;0;1" keyTimes="0;0.72;0.75;0.80;0.85;0.90;0.93;0.96;0.98;0.99;1" dur="11s" repeatCount="indefinite"/>
+  </rect>
+</svg>
