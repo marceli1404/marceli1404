@@ -42,9 +42,4 @@
   <img src="https://img.shields.io/badge/Git-0d1117?logo=git&logoColor=f05032&labelColor=0d1117" alt="Git" />
 </p>
 
-### 📊 GitHub
-
-<p>
-  <img src="https://github-readme-stats.vercel.app/api?username=marceli1404&show_icons=true&hide_border=true&theme=github_dark&title_color=39d353&icon_color=39d353" alt="marceli1404's GitHub stats" height="165" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=marceli1404&layout=compact&hide_border=true&theme=github_dark&title_color=39d353" alt="Top languages" height="165" />
-</p>
+<sub>📍 Edinburgh, Scotland · exploring AI workflows, automation, and self-hosting</sub>
