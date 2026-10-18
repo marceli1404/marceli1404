@@ -62,7 +62,7 @@ flowchart LR
 
 ## Recommended future architecture
 
-The present single-file script is good for an easily audited preview, but is not an ideal permanent 70+ KiB codebase.
+The publicly served script is still a single-file launcher, but its **editable source is now separated into five ordered PowerShell modules** under `src/`. `build.ps1` concatenates these without extra downloads, a BOM or platform-dependent encoding. Windows CI checks its output hash against the committed launcher. At runtime it remains a self-contained script.
 
 A maintainable PowerShell version would have:
 - `src/Core`: catalogues and registry plan/read/write/undo functions; no WPF dependency.
