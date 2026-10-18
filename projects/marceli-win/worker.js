@@ -1,6 +1,6 @@
-// Marceli Win 0.2 distribution worker. MIT. No telemetry or arbitrary remote execution.
+// Marceli Win 0.3 distribution worker. MIT. No telemetry or arbitrary remote execution.
 // Both resources are pinned to the same reviewed immutable source revision.
-const SOURCE_COMMIT = "8cc5ae05f1821a4c368e1b113fed4e939cce4605";
+const SOURCE_COMMIT = "ed6be966c74f9f985c998046d0d5353c3330f088";
 const ORIGIN = "https://raw.githubusercontent.com/marceli1404/marceli1404/" + SOURCE_COMMIT + "/projects/marceli-win/";
 const PAGE = ORIGIN + "site.html";
 const SCRIPT = ORIGIN + "MarceliWin.ps1";
@@ -9,7 +9,7 @@ const baseHeaders = {
   "referrer-policy": "no-referrer",
   "x-frame-options": "DENY",
   "cache-control": "public, max-age=300, no-transform",
-  "x-marceli-win-version": "0.2.2-presets"
+  "x-marceli-win-version": "0.3.0-preview"
 };
 export default {
   async fetch(request) {
