@@ -8,7 +8,7 @@ const baseHeaders = {
   "x-content-type-options": "nosniff",
   "referrer-policy": "no-referrer",
   "x-frame-options": "DENY",
-  "cache-control": "public, max-age=300",
+  "cache-control": "public, max-age=300, no-transform",
   "x-marceli-win-version": "0.2.0-preview"
 };
 export default {
