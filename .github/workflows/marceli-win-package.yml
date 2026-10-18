@@ -48,7 +48,8 @@ jobs:
           endpoint: ${{ vars.MARCELI_SIGNING_ENDPOINT }}
           signing-account-name: ${{ vars.MARCELI_SIGNING_ACCOUNT }}
           certificate-profile-name: ${{ vars.MARCELI_SIGNING_PROFILE }}
-          files: ${{ github.workspace }}\projects\marceli-win\dist\stage\MarceliWin.ps1
+          files-folder: ${{ github.workspace }}\projects\marceli-win\dist\stage
+          files-folder-filter: ps1
       - name: Compile the per-user Windows installer
         shell: powershell
         env:
