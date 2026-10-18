@@ -229,7 +229,7 @@ function LoadProfile {
   return @{Apps=$apps;Tweaks=$tweaks}
  } catch {Log ('Import failed: '+$_.Exception.Message);return $null}
 }
-function RestoreLast {
+function RestoreBackup([switch]$NoPrompt) {
  if(!(Test-Path $script:BackupPath)){Log 'No last-batch registry backup found.';return}
  try {
   $raw=Get-Content -LiteralPath $script:BackupPath -Raw -ErrorAction Stop
@@ -247,7 +247,7 @@ function RestoreLast {
    }
   }
  } catch {Log ('Undo blocked: '+$_.Exception.Message);return}
- if([Windows.MessageBox]::Show('Undo the latest registry tweak batch? Other apps may have changed these settings since.','Marceli Win','YesNo','Warning') -ne 'Yes'){return}
+ if(!$NoPrompt -and [Windows.MessageBox]::Show('Undo the latest registry tweak batch? Other apps may have changed these settings since.','Marceli Win','YesNo','Warning') -ne 'Yes'){return}
  $failed=$false
  foreach($r in $records){
   try {
@@ -263,6 +263,7 @@ function RestoreLast {
  if(!$failed){Remove-Item -LiteralPath $script:BackupPath -Force;Log 'Last batch successfully undone.'}
  else {Log 'Some items failed. Keeping the backup for another attempt.'}
 }
+function RestoreLast { RestoreBackup }
 function MakeRestorePoint {
  if(!(IsAdmin)){
   [Windows.MessageBox]::Show('Open Windows PowerShell as Administrator to request a restore point.','Elevation needed')|Out-Null
