@@ -1,4 +1,4 @@
-# Marceli Win — 0.2 developer preview
+# Marceli Win — 0.3 developer preview
 
 **Your Windows. Your choices. A fluid control centre.**
 
@@ -15,11 +15,13 @@ Original, independently written Windows 10/11 PowerShell + WPF utility with a mo
 | Gaming | Game Mode, background capture preferences, graphics/HDR, Game Bar, mouse and audio settings, DirectX Diagnostics |
 | Network | Adapter and network settings, IP information, DNS flush, ping, route table, netstat and traceroute |
 | Repair | DISM CheckHealth/ScanHealth/RestoreHealth, SFC, online disk scan, Reliability Monitor, WinGet upgrades |
-| Recovery | Latest tweak-batch undo, archive of earlier backup batches, restore-point request, local diagnostic report |
+| Recovery | Latest-batch undo with allowlist validation, archived earlier backups, asynchronously requested restore points, local diagnostic report |
 | Setup review | Dedicated summary of selected apps and tweaks, with separate preview, install-apps and apply-tweaks actions. Manually changing choices turns the selection into Custom |\n| Portability | Import/export of selected app + tweak IDs in a validated JSON profile; imported selections never execute automatically |
-| UI | Sidebar navigation, ambient animated gradients, morphing blob geometry, animated panel changes, global search (Ctrl+K), motion-off switch |
+| UI | Sidebar navigation, ambient animated gradients, morphing blob geometry, animated panel changes, global search (Ctrl+K), reduced-motion and high-contrast awareness |
 | Web | Responsive CSS morphing visuals, interactive filter/searchable feature explorer, preview illustration, copyable commands and reduced-motion support |
 | Privacy | No telemetry, remote command source, or background analytics. Activity logs stay in the local user profile |
+| Execution engine | Sequential native-process queue with an active-job label, progress and stop-after-current; closing while busy warns before leaving an installer detached |
+| Registry diff | Inspect the current value and original type before writing, skip unchanged tweaks, refuse backup writes when persistence fails, and validate undo against the trusted catalogue |
 
 **Catalogue counts do not imply that all actions are unique capabilities or that all Windows versions support every registry value.** Some shortcuts vary by Windows version, and individual WinGet packages may be unavailable in your region.
 
@@ -65,7 +67,9 @@ To apply a preset from the CLI, the script asks you to type `APPLY` unless `-Yes
 - `site.html`: standalone responsive promotional/docs page with CSS morphing animation and client-side filtering.
 - `worker.js`: Cloudflare edge router. It serves the PowerShell script at `/win`, the website at `/` and `/about`, and points to a commit-pinned GitHub source.
 - `LICENSE`: original MIT licence.
-- GitHub Actions runs PowerShell parsing, safe-preset dry-run, WPF-load smoke checks, combined preset selection assertions and a smoke run of the live PowerShell launcher on Windows.
+- GitHub Actions runs PowerShell parsing, PSScriptAnalyzer security lint, safe-preset dry-run, WPF-load smoke checks, a harmless process-queue test, combined preset selection assertions and a smoke run of the live PowerShell launcher on Windows.
+
+For engineering decisions, Microsoft documentation and the full stable-release acceptance checklist, see [ENGINEERING.md](ENGINEERING.md).
 
 ## Safety & known limits
 
@@ -74,7 +78,7 @@ To apply a preset from the CLI, the script asks you to type `APPLY` unless `-Yes
 - Tweaks use user-level registry values and record original values before changes. The most recent batch is directly undoable. Previous backup JSON files are archived, but archived batches are not selectable through the GUI yet.
 - Never use arbitrary “debloat” procedures that disable Defender, Windows Update, UAC, anti-cheat or essential services. This release intentionally avoids those.
 - Package managers are third-party software supply chains: review any requested app, version, sources, installer privileges and licences.
-- Native repair tools and app installs can take time and may briefly block the WPF event loop. Background progress and cancellable jobs are future work.
+- Native repair tools and app installs now run in a sequential non-blocking task queue; cancellation **skips pending tasks only** and does not kill an active installer. Progress is per-operation completion, not a percentage of a native installer.
 - Windows restore-point creation needs admin privileges and an enabled System Protection configuration.
 - Some Windows Settings URI shortcuts and preference keys vary by version. No registry toggle guarantees performance improvement.
 - Script is **not digitally code-signed**.
