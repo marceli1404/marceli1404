@@ -50,11 +50,35 @@ try {
  $restored=Snapshot $script:Tweaks[1]
  Assert ($restored.Exists -and $restored.Kind -eq 'String' -and $restored.Value -eq 'old-original') 'String rollback failed'
 
+ # A failing later change must undo an earlier successful write in the same batch.
+ # A test-only invalid registry value type is used to force a write failure.
+ $script:Tweaks[1].Kind='InvalidValueKindForTest'
+ Apply @('test-dword','test-string')
+ Assert (!(Test-Path -LiteralPath (PendingRegistryPath))) 'Automatic rollback left an unnecessary transaction journal'
+ Assert ($null -eq (Get-ItemProperty -Path $reg -Name 'TestDword' -ErrorAction SilentlyContinue)) 'Earlier change was not rolled back after later failure'
+ Assert ((Get-ItemProperty -Path $reg -Name 'TestString').TestString -eq 'old-original') 'Failed batch modified previous string'
+ $script:Tweaks[1].Kind='String'
+
+ # Simulate a killed process after the durable journal, but before final commit.
+ $initial=@(Snapshot $script:Tweaks[0])
+ SavePendingRegistryRecords $initial
+ New-ItemProperty -Path $reg -Name 'TestDword' -PropertyType DWord -Value 1 -Force|Out-Null
+ Assert (Test-Path -LiteralPath (PendingRegistryPath)) 'Crash journal was not persisted'
+ Apply @('test-string')
+ Assert ((Get-ItemProperty -Path $reg -Name 'TestString').TestString -eq 'old-original') 'Pending transaction failed to block further writes'
+ RestoreBackup -NoPrompt
+ Assert ($null -eq (Get-ItemProperty -Path $reg -Name 'TestDword' -ErrorAction SilentlyContinue)) 'Interrupted batch was not recovered'
+ Assert (!(Test-Path -LiteralPath (PendingRegistryPath))) 'Recovery did not clear the journal'
+
  # A forged backup must not be able to change an arbitrary registry key.
  $bad=@([pscustomobject]@{ID='forged';Path='HKCU:\Software\Microsoft\Windows\CurrentVersion\Run';Key='Evil';Exists=$false;Kind='String';Value=$null})
  ConvertTo-Json -InputObject $bad|Set-Content -LiteralPath $script:BackupPath -Encoding UTF8
  RestoreBackup -NoPrompt
  Assert (Test-Path $script:BackupPath) 'Rejected malicious backup should remain for investigation'
+ Copy-Item -LiteralPath $script:BackupPath -Destination (PendingRegistryPath) -Force
+ RestoreBackup -NoPrompt
+ Assert (Test-Path -LiteralPath (PendingRegistryPath)) 'Rejected malicious journal should not be deleted'
+ Remove-Item -LiteralPath (PendingRegistryPath) -Force
  Assert (!$script:Tweaks[0].Path.StartsWith('HKLM')) 'Scratch catalogue should be user-only'
 
  # Snapshot hard-rejects paths outside the current user.
@@ -62,7 +86,7 @@ try {
  $blocked=$false
  try {Snapshot $forbidden|Out-Null} catch {$blocked=$true}
  Assert $blocked 'HKLM snapshot was not blocked'
- Write-Host 'PASS: preview, backup-before-write, no-op detection, DWORD undo, String undo, forged-backup rejection, HKLM rejection'
+ Write-Host 'PASS: preview, no-op, typed rollback, interrupted-journal recovery, failure rollback, tampered backup/journal blocking, HKLM rejection'
 } finally {
  Remove-Item -Path $reg -Recurse -Force -ErrorAction SilentlyContinue
  Remove-Item -LiteralPath $script:Data -Recurse -Force -ErrorAction SilentlyContinue
