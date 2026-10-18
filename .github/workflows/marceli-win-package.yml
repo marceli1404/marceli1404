@@ -1,0 +1,117 @@
+name: Marceli Win installer candidate
+on:
+  pull_request:
+    paths:
+      - "projects/marceli-win/**"
+      - ".github/workflows/marceli-win-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  build-and-verify:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: projects/marceli-win
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate reproducible script build
+        shell: powershell
+        run: '& .\build.ps1 -Check'
+      - name: Exercise real registry backup and rollback in disposable HKCU scratch path
+        shell: powershell
+        run: '& .\tests\Registry.Integration.ps1'
+      - name: Install the NSIS compiler
+        shell: pwsh
+        run: |
+          if (!(Test-Path 'C:\Program Files (x86)\NSIS\makensis.exe')) {
+            choco install nsis --no-progress -y
+            if ($LASTEXITCODE -ne 0) {throw "NSIS installation failed: $LASTEXITCODE"}
+          }
+          if (!(Test-Path 'C:\Program Files (x86)\NSIS\makensis.exe')) {throw 'NSIS compiler unavailable'}
+      - name: Stage bundled app payload
+        shell: powershell
+        run: '& .\release\Build-Candidate.ps1 -Phase Stage'
+      # No secrets are used or made available for PR builds or unprotected refs.
+      - name: Sign PowerShell payload through verified Azure publisher
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && vars.MARCELI_SIGNING_ENABLED == 'true'
+        uses: azure/artifact-signing-action@v2.0.0
+        with:
+          azure-tenant-id: ${{ secrets.MARCELI_AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.MARCELI_AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.MARCELI_AZURE_CLIENT_SECRET }}
+          endpoint: ${{ vars.MARCELI_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.MARCELI_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.MARCELI_SIGNING_PROFILE }}
+          files: ${{ github.workspace }}\projects\marceli-win\dist\stage\MarceliWin.ps1
+      - name: Compile the per-user Windows installer
+        shell: powershell
+        env:
+          SIGNING_ENABLED: ${{ vars.MARCELI_SIGNING_ENABLED }}
+        run: |
+          $isSigned=$env:GITHUB_EVENT_NAME -eq 'workflow_dispatch' -and $env:GITHUB_REF -eq 'refs/heads/main' -and $env:SIGNING_ENABLED -eq 'true'
+          & .\release\Build-Candidate.ps1 -Phase Compile -Signed:$isSigned
+      - name: Real silent install and uninstall smoke test
+        shell: powershell
+        env:
+          SIGNING_ENABLED: ${{ vars.MARCELI_SIGNING_ENABLED }}
+        run: |
+          $isSigned=$env:GITHUB_EVENT_NAME -eq 'workflow_dispatch' -and $env:GITHUB_REF -eq 'refs/heads/main' -and $env:SIGNING_ENABLED -eq 'true'
+          $label=if($isSigned){'signed-candidate'}else{'unsigned-preview'}
+          & .\tests\Installer.Integration.ps1 -InstallerPath ("dist\MarceliWin-Setup-0.3.0-"+$label+".exe") -ExpectedScriptPath 'dist\stage\MarceliWin.ps1'
+      - name: Sign installer through verified Azure publisher
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && vars.MARCELI_SIGNING_ENABLED == 'true'
+        uses: azure/artifact-signing-action@v2.0.0
+        with:
+          azure-tenant-id: ${{ secrets.MARCELI_AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.MARCELI_AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.MARCELI_AZURE_CLIENT_SECRET }}
+          endpoint: ${{ vars.MARCELI_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.MARCELI_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.MARCELI_SIGNING_PROFILE }}
+          files: ${{ github.workspace }}\projects\marceli-win\dist\MarceliWin-Setup-0.3.0-signed-candidate.exe
+      - name: Produce checksum-verified candidate and portable ZIP
+        shell: powershell
+        env:
+          SIGNING_ENABLED: ${{ vars.MARCELI_SIGNING_ENABLED }}
+        run: |
+          $isSigned=$env:GITHUB_EVENT_NAME -eq 'workflow_dispatch' -and $env:GITHUB_REF -eq 'refs/heads/main' -and $env:SIGNING_ENABLED -eq 'true'
+          & .\release\Build-Candidate.ps1 -Phase Finalize -Signed:$isSigned -SourceCommit $env:GITHUB_SHA
+      - name: Negative security tests must reject tampering and missing publisher pin
+        shell: pwsh
+        run: |
+          $scratch=Join-Path $env:RUNNER_TEMP 'marceli-tamper-check'
+          New-Item -ItemType Directory -Path $scratch -Force | Out-Null
+          Copy-Item 'dist/release/MarceliWin.ps1','dist/release/release-manifest.json' -Destination $scratch
+          $installer=(Get-ChildItem dist/release -Filter 'MarceliWin-Setup-*.exe'|Select-Object -First 1)
+          Copy-Item $installer.FullName -Destination $scratch
+          [IO.File]::AppendAllText((Join-Path $scratch 'MarceliWin.ps1'),'#tampered')
+          $rejected=$false
+          try {
+            & release/Test-ReleaseIntegrity.ps1 -ManifestPath (Join-Path $scratch 'release-manifest.json') -BaseDirectory $scratch -ErrorAction Stop
+          } catch {$rejected=$true}
+          if(!$rejected){throw 'Tampered script passed checksum verification'}
+          $rejected=$false
+          try {
+            & release/Test-ReleaseIntegrity.ps1 -ManifestPath 'dist/release/release-manifest.json' -BaseDirectory 'dist/release' -RequireSignature -ErrorAction Stop
+          } catch {$rejected=$true}
+          if(!$rejected){throw 'Publisher identity missing yet verifier claimed authenticity'}
+          Write-Host 'Tampering and missing trusted publisher both correctly rejected.'
+      - name: Upload clearly labeled candidate files
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarceliWin-0.3.0-desktop-installer-candidate
+          path: projects/marceli-win/dist/release/*
+          if-no-files-found: error
+          retention-days: 21
+      # Provenance is NOT a substitute for Authenticode / trusted publisher signatures.
+      - name: Generate GitHub/Sigstore artifact provenance when explicitly dispatched on main
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+        uses: actions/attest@v4
+        with:
+          subject-path: projects/marceli-win/dist/release/*
