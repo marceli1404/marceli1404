@@ -39,7 +39,7 @@ flowchart LR
 
 **Security boundaries:** imported JSON profiles supply **only allowlisted app/tweak identifiers**. They cannot supply arbitrary executables or command text. Restoring registry backups rejects entries outside the known tweak path/key catalogue. Changes never happen when picking a preset.
 
-**Registry type safety:** before a change, retain whether the value existed, the previous value and RegistryValueKind. For instance, `MouseTrails` is a string-valued setting, not a DWORD. Skip unchanged values; save a backup before any modifications. Failures remain logged for follow-up.
+**Registry type safety and crash recovery:** before a change, retain whether each value existed, its previous value and RegistryValueKind. For instance, `MouseTrails` is a string-valued setting, not a DWORD. Skip unchanged values. A validated recovery journal is durably saved at `%LOCALAPPDATA%\MarceliWin\pending-registry-transaction.json` **before the first write**. If a later write fails, automatically attempt to restore the entire original batch in reverse order and leave the journal in place if recovery is incomplete. If the process is interrupted, the next GUI launch displays Recovery and blocks further tweak writes until the journal is resolved. Only when the whole batch succeeds does the journal become the latest completed undo backup; older completed backups are archived locally. This is an application-level compensating transaction, **not** an ACID Windows Registry transaction or a guarantee against power failure.
 
 **Local data:** `%LOCALAPPDATA%\MarceliWin\` holds logs and backups. Current implementation rotates `activity.log` at 5 MiB and trims the on-screen text. Reports and profiles are exported to a location the user selects.
 
