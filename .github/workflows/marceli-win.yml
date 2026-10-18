@@ -20,6 +20,21 @@ jobs:
             $errors | Format-List | Out-String | Write-Error
             exit 1
           }
+      - name: PowerShell security static analysis
+        shell: pwsh
+        run: |
+          if (!(Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Repository PSGallery -Force -ErrorAction Stop
+          }
+          Import-Module PSScriptAnalyzer -ErrorAction Stop
+          $path = 'projects/marceli-win/MarceliWin.ps1'
+          $rules = @('PSAvoidUsingInvokeExpression','PSAvoidUsingPlainTextForPassword','PSAvoidUsingConvertToSecureStringWithPlainText','PSAvoidUsingUsernameAndPasswordParams')
+          $problems = @(Invoke-ScriptAnalyzer -Path $path -IncludeRule $rules -ErrorAction Stop)
+          if ($problems.Count) {
+            $problems | Format-Table RuleName, Severity, Line, Message -AutoSize | Out-String | Write-Host
+            throw "PowerShell security lint found $($problems.Count) issue(s)."
+          }
+          Write-Host 'PowerShell security static analysis: passed'
       - name: Preview safe preset without changing Windows
         shell: powershell
         run: |
