@@ -1,0 +1,18 @@
+Marceli Win v0.3 desktop installer - developer preview
+
+This installer installs for the current Windows user only:
+  %LOCALAPPDATA%\Programs\MarceliWin
+
+It creates two Start Menu shortcuts: Marceli Win and Uninstall Marceli Win.
+The app uses Windows PowerShell 5.1 and WPF. It does not install a background service,
+modify Windows system settings during setup or change execution policy.
+
+The unsigned build is for testing only. Windows may warn or block execution.
+Do not trust it as an official signed release.
+
+Uninstall removes only the installed script, launcher, licence, release notes and
+its shortcuts/registration. Your activity logs and registry undo backups under
+%LOCALAPPDATA%\MarceliWin are preserved intentionally so you can recover settings.
+
+Source: https://github.com/marceli1404/marceli1404/pull/1
+Licence: MIT
