@@ -16,3 +16,8 @@ its shortcuts/registration. Your activity logs and registry undo backups under
 
 Source: https://github.com/marceli1404/marceli1404/pull/1
 Licence: MIT
+
+The installation also includes Check-Update.ps1 and Test-ReleaseIntegrity.ps1.
+The update checker requires a separately trusted 40-character publisher certificate
+thumbprint and checks official stable GitHub Releases. It downloads verified updates
+but NEVER automatically installs or executes them. No stable signed release yet exists.
