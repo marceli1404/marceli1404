@@ -8,6 +8,7 @@ Marceli Win remains a Windows PowerShell 5.1 / WPF desktop application; packagin
 
 - installs under `%LOCALAPPDATA%\Programs\MarceliWin` for the current Windows user (no administrator access requested during installation);
 - creates Start Menu shortcuts for launch and uninstall;
+- bundles a manual `Check-Update.ps1` and `Test-ReleaseIntegrity.ps1` verifier in the installation directory and portable ZIP, requiring an independently pinned publisher identity before trusting a newer release;
 - registers under Windows Apps & Features (HKCU uninstall entry);
 - does not modify PowerShell execution policy, Defender, Windows Update, UAC, or Windows services;
 - preserves the user's local log and registry rollback history at `%LOCALAPPDATA%\MarceliWin` on uninstall;
