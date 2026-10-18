@@ -12,7 +12,7 @@ Set-Content -LiteralPath $sentinel 'Uninstaller must never delete registry backu
 try {
  $install=Start-Process -FilePath $full -ArgumentList '/S' -Wait -PassThru
  if($install.ExitCode -ne 0){throw ('Silent install failed: '+$install.ExitCode)}
- foreach($name in @('MarceliWin.ps1','launcher.cmd','LICENSE','INSTALLATION.txt','Uninstall.exe')){
+ foreach($name in @('MarceliWin.ps1','launcher.cmd','LICENSE','INSTALLATION.txt','Check-Update.ps1','Test-ReleaseIntegrity.ps1','Uninstall.exe')){
   if(!(Test-Path (Join-Path $target $name))){throw ('Missing installed resource: '+$name)}
  }
  $shortcut=Join-Path ([Environment]::GetFolderPath('Programs')) 'Marceli Win\Marceli Win.lnk'
