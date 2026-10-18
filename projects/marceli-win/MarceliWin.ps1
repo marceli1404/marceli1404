@@ -495,7 +495,7 @@ if($Preset) { Apply $script:Presets[$Preset];return }
 Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
 [xml]$ui=@'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Title="Marceli Win &#xB7; Preview 0.2" Width="1270" Height="845" MinWidth="1060" MinHeight="700"
+ Title="Marceli Win &#xB7; Preview 0.3" Width="1270" Height="845" MinWidth="1060" MinHeight="700"
  Background="#090E1B" Foreground="#E2E8F0" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="13">
  <Window.Resources>
   <Style x:Key="NavButton" TargetType="Button">
@@ -525,7 +525,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
    <DockPanel>
     <StackPanel DockPanel.Dock="Top" Margin="20,29,10,30">
      <StackPanel Orientation="Horizontal"><TextBlock Text="&#x25C8;" Foreground="#A5B4FC" FontSize="35" VerticalAlignment="Center"/><StackPanel Margin="10,0,0,0"><TextBlock Text="MARCELI" FontSize="20" FontWeight="Bold"/><TextBlock Text="WIN / TOOLKIT" Foreground="#A5B4FC" FontSize="11" FontWeight="SemiBold"/></StackPanel></StackPanel>
-     <Border Background="#233452" CornerRadius="12" Padding="10,6" HorizontalAlignment="Left" Margin="0,17,0,0"><TextBlock Text="PREVIEW 0.2  &#xB7;  OPEN SOURCE" FontSize="10" Foreground="#BFC8E8"/></Border>
+     <Border Background="#233452" CornerRadius="12" Padding="10,6" HorizontalAlignment="Left" Margin="0,17,0,0"><TextBlock Text="PREVIEW 0.3  &#xB7;  OPEN SOURCE" FontSize="10" Foreground="#BFC8E8"/></Border>
     </StackPanel>
     <StackPanel DockPanel.Dock="Bottom" Margin="16,20">
      <Border Background="#192842" CornerRadius="13" Padding="12"><StackPanel>
@@ -811,7 +811,7 @@ if ($SmokeTest) {
  AnimateMorph
  StopMorph
  $script:MotionEnabled=$false
-} elseif ([Windows.SystemParameters]::MenuAnimation) {
+} elseif ([Windows.SystemParameters]::ClientAreaAnimation -and ![Windows.SystemParameters]::HighContrast) {
  try { AnimateMorph } catch { StopMorph; $script:MotionEnabled=$false; Log ('Motion disabled: '+$_.Exception.Message) }
 } else { $script:MotionEnabled=$false; (El 'MotionToggle').Content='Motion: off' }
 (El 'MotionToggle').Add_Click({
