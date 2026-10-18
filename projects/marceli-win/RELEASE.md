@@ -41,7 +41,7 @@ The `Marceli Win installer candidate` GitHub Actions workflow runs this process 
 4. rollback of the new DWORD to absence;
 5. REG_SZ changes with preservation of the previous String value/type;
 6. rejection of forged backup paths outside the known catalogue;
-7. rejection of an attempted HKLM snapshot.
+7. rejection of an attempted HKLM snapshot;\n8. automatic reversal of an earlier successful write after a later write fails;\n9. simulated crash journal recovery and blocking subsequent writes until recovery;\n10. rejection of forged pending journals.
 
 The test cleans up its temporary HKCU path. These checks improve confidence but don't prove compatibility of all real Windows tweak keys or registry permissions.
 
