@@ -58,6 +58,14 @@ jobs:
             Invoke-WebRequest $check.Url -OutFile $liveFile -TimeoutSec 30 -ErrorAction Stop
             $expected = (Get-FileHash $sourceFile -Algorithm SHA256).Hash
             $actual = (Get-FileHash $liveFile -Algorithm SHA256).Hash
-            if ($expected -ne $actual) { throw "$($check.Url) does not match pinned source ($pin)" }
+            if ($expected -ne $actual) {
+              $srcText = Get-Content $sourceFile -Raw
+              $liveText = Get-Content $liveFile -Raw
+              Write-Host "Pinned bytes: $((Get-Item $sourceFile).Length); Live bytes: $((Get-Item $liveFile).Length)"
+              Write-Host "Pinned prefix: $($srcText.Substring(0,[Math]::Min(180,$srcText.Length)))"
+              Write-Host "Live prefix: $($liveText.Substring(0,[Math]::Min(180,$liveText.Length)))"
+              Write-Host "Website feature-list present: $($liveText.Contains('id=' + [char]34 + 'feature-list'))"
+              throw "$($check.Url) does not match pinned source ($pin)"
+            }
             Write-Host "$($check.Url) exactly matches pinned source"
           }
