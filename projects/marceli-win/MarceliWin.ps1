@@ -1,4 +1,4 @@
-# Marceli Win 0.1 - Copyright (c) 2026 Marceli Pawlinski. MIT.
+﻿# Marceli Win 0.1 - Copyright (c) 2026 Marceli Pawlinski. MIT.
 # Review downloaded scripts before running. No telemetry or secondary code downloads.
 param([ValidateSet('','Safe','Balanced','Gaming','Developer','Privacy','Focus','Accessibility')][string]$Preset='', [switch]$WhatIf, [switch]$Yes, [switch]$SmokeTest)
 $ErrorActionPreference='Stop'
