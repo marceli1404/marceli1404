@@ -2,8 +2,8 @@
 ; Compile from projects/marceli-win with makensis.exe /V3 installer\MarceliWin.nsi
 Unicode true
 !include "MUI2.nsh"
-; All relative build paths now resolve against the project root, not installer/.
-!cd "${__FILEDIR__}\\.."
+; Resolve all source assets against the current installer script directory.
+!define APPROOT "${__FILEDIR__}\.."
 
 !ifndef APP_VERSION
   !define APP_VERSION "0.3.0"
@@ -13,7 +13,7 @@ Unicode true
 !endif
 
 Name "Marceli Win ${APP_VERSION} (Preview)"
-OutFile "dist\MarceliWin-Setup-${APP_VERSION}-${BUILD_LABEL}.exe"
+OutFile "${APPROOT}\dist\MarceliWin-Setup-${APP_VERSION}-${BUILD_LABEL}.exe"
 InstallDir "$LOCALAPPDATA\Programs\MarceliWin"
 InstallDirRegKey HKCU "Software\MarceliWin" "InstallDir"
 RequestExecutionLevel user
@@ -30,7 +30,7 @@ VIAddVersionKey "LegalCopyright" "Copyright 2026 Marceli Pawlinski. MIT."
 
 !define MUI_ABORTWARNING
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE"
+!insertmacro MUI_PAGE_LICENSE "${APPROOT}\LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -43,8 +43,8 @@ Section "Marceli Win (required)" SecMain
   SetOutPath "$INSTDIR"
   File "dist\\stage\\MarceliWin.ps1"
   File "dist\\stage\\launcher.cmd"
-  File "LICENSE"
-  File "installer\INSTALLATION.txt"
+  File "${APPROOT}\LICENSE"
+  File "${APPROOT}\installer\INSTALLATION.txt"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   CreateDirectory "$SMPROGRAMS\Marceli Win"
