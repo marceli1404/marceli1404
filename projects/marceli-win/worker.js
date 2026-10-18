@@ -1,6 +1,6 @@
 // Marceli Win 0.3 distribution worker. MIT. No telemetry or arbitrary remote execution.
 // Both resources are pinned to the same reviewed immutable source revision.
-const SOURCE_COMMIT = "ed6be966c74f9f985c998046d0d5353c3330f088";
+const SOURCE_COMMIT = "c295dd3a63d6a4d3a31108e336ca7a958b1be406";
 const ORIGIN = "https://raw.githubusercontent.com/marceli1404/marceli1404/" + SOURCE_COMMIT + "/projects/marceli-win/";
 const PAGE = ORIGIN + "site.html";
 const SCRIPT = ORIGIN + "MarceliWin.ps1";
@@ -9,7 +9,7 @@ const baseHeaders = {
   "referrer-policy": "no-referrer",
   "x-frame-options": "DENY",
   "cache-control": "public, max-age=300, no-transform",
-  "x-marceli-win-version": "0.3.0-preview"
+  "x-marceli-win-version": "0.3.0-recovery-preview"
 };
 export default {
   async fetch(request) {
@@ -36,7 +36,7 @@ export default {
     } else {
       h.set("content-security-policy","default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'");
     }
-    // Stream source bytes unchanged: PowerShell 5.1 needs the UTF-8 BOM.
+    // Stream source bytes unchanged: the reviewed PowerShell source is ASCII-safe for irm | iex.
     return new Response(request.method === "HEAD" ? null : upstream.body, {status:200,headers:h});
   }
 };
