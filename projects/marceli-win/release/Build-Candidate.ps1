@@ -19,6 +19,8 @@ try {
   Copy-Item -LiteralPath (Join-Path $root 'launcher.cmd') -Destination $stage -Force
   Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination $stage -Force
   Copy-Item -LiteralPath (Join-Path $root 'installer\INSTALLATION.txt') -Destination $stage -Force
+  Copy-Item -LiteralPath (Join-Path $root 'release\Check-Update.ps1') -Destination $stage -Force
+  Copy-Item -LiteralPath (Join-Path $root 'release\Test-ReleaseIntegrity.ps1') -Destination $stage -Force
   Write-Host 'Staged the standalone app and installer resources.'
  }
  elseif($Phase -eq 'Compile'){
