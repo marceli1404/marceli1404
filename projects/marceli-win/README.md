@@ -102,3 +102,7 @@ Original implementation written for Marceli Win. This project is independent of 
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
+
+## Windows installer preview
+
+An unsigned, **per-user NSIS installer candidate** is built and smoke-tested by [the installer workflow](../../.github/workflows/marceli-win-package.yml). It creates Start Menu shortcuts and an uninstall entry, preserves local recovery data, and bundles the manual signed-update verifier. The portable ZIP and installer are uploaded as GitHub Actions test artifacts, not published as a stable signed release. See [RELEASE.md](RELEASE.md) for signing requirements and Windows installation tests.
