@@ -1,6 +1,6 @@
 // Marceli Win 0.2 distribution worker. MIT. No telemetry or arbitrary remote execution.
 // Both resources are pinned to the same reviewed immutable source revision.
-const SOURCE_COMMIT = "ff9500ef97750951f59b3c4d0317b6abefca07f8";
+const SOURCE_COMMIT = "9420a1a4f72d8f5fd451638cec2e4e0253491238";
 const ORIGIN = "https://raw.githubusercontent.com/marceli1404/marceli1404/" + SOURCE_COMMIT + "/projects/marceli-win/";
 const PAGE = ORIGIN + "site.html";
 const SCRIPT = ORIGIN + "MarceliWin.ps1";
@@ -9,7 +9,7 @@ const baseHeaders = {
   "referrer-policy": "no-referrer",
   "x-frame-options": "DENY",
   "cache-control": "public, max-age=300, no-transform",
-  "x-marceli-win-version": "0.2.0-preview"
+  "x-marceli-win-version": "0.2.1-hotfix"
 };
 export default {
   async fetch(request) {
@@ -30,6 +30,7 @@ export default {
     const h = new Headers(baseHeaders);
     h.set("content-type", isScript ? "text/plain; charset=utf-8" : "text/html; charset=utf-8");
     if(isScript) {
+      h.set("cache-control","no-store, no-transform");
       h.set("content-disposition",'inline; filename="MarceliWin.ps1"');
       h.set("content-security-policy","default-src 'none'; frame-ancestors 'none'");
     } else {
