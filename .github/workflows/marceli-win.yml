@@ -65,6 +65,11 @@ jobs:
               Write-Host "Pinned prefix: $($srcText.Substring(0,[Math]::Min(180,$srcText.Length)))"
               Write-Host "Live prefix: $($liveText.Substring(0,[Math]::Min(180,$liveText.Length)))"
               Write-Host "Website feature-list present: $($liveText.Contains('id=' + [char]34 + 'feature-list'))"
+              $first = 0
+              while($first -lt [Math]::Min($srcText.Length,$liveText.Length) -and $srcText[$first] -eq $liveText[$first]){$first++}
+              Write-Host "First mismatched char: $first"
+              Write-Host "Live around mismatch: $($liveText.Substring([Math]::Max(0,$first-60),[Math]::Min(700,$liveText.Length-[Math]::Max(0,$first-60))))"
+              Write-Host "Live ending: $($liveText.Substring([Math]::Max(0,$liveText.Length-700)))"
               throw "$($check.Url) does not match pinned source ($pin)"
             }
             Write-Host "$($check.Url) exactly matches pinned source"
