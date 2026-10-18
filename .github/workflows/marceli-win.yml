@@ -28,6 +28,17 @@ jobs:
         shell: powershell
         run: |
           & '.\projects\marceli-win\MarceliWin.ps1' -SmokeTest
+      - name: Reproduce remote irm pipe iex startup safely
+        shell: powershell
+        env:
+          MARCELI_WIN_SMOKE_TEST: "1"
+        run: |
+          $uri = 'https://raw.githubusercontent.com/marceli1404/marceli1404/' + $env:GITHUB_SHA + '/projects/marceli-win/MarceliWin.ps1'
+          $download = Invoke-RestMethod -Uri $uri -TimeoutSec 40
+          if ([int][char]$download[0] -eq 65279) { throw 'Leading Unicode BOM will break irm | iex' }
+          if ($download -notmatch 'CreateFromGeometry') { throw 'Missing morph geometry fix' }
+          $download | Invoke-Expression
+          Write-Host 'Live-style irm | iex completed WPF startup without system changes'
       - name: Validate website JavaScript and Worker syntax
         shell: pwsh
         run: |
