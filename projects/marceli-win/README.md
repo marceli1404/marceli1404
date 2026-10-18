@@ -10,18 +10,26 @@ Original, independently written Windows 10/11 PowerShell + WPF utility with a mo
 | --- | --- |
 | Applications | 52 curated WinGet package entries; searchable cards; select-visible / clear; install selection; installed-package inventory; app upgrades |
 | Tweaks | 29 user-level registry preferences with preview, confirmation, a last-batch undo and local backup history |
-| Profiles | Safe, Balanced, Gaming, Developer, Privacy, Focus and Accessibility presets; all previewable |
+| Preset bar | Prominent scrollable ribbon across the app: Safe, Balanced, Gaming, Developer, Privacy, Focus, Accessibility and Custom. Every profile selects **both** curated WinGet apps and reversible tweaks; selecting does not execute anything |
 | Windows actions | 52 named allowlisted action entries, including Windows Settings shortcuts, Task Manager, Resource Monitor, Device Manager, Disk Cleanup and diagnostics |
 | Gaming | Game Mode, background capture preferences, graphics/HDR, Game Bar, mouse and audio settings, DirectX Diagnostics |
 | Network | Adapter and network settings, IP information, DNS flush, ping, route table, netstat and traceroute |
 | Repair | DISM CheckHealth/ScanHealth/RestoreHealth, SFC, online disk scan, Reliability Monitor, WinGet upgrades |
 | Recovery | Latest tweak-batch undo, archive of earlier backup batches, restore-point request, local diagnostic report |
-| Portability | Import/export of selected app + tweak IDs in a validated JSON profile; imported selections never execute automatically |
+| Setup review | Dedicated summary of selected apps and tweaks, with separate preview, install-apps and apply-tweaks actions. Manually changing choices turns the selection into Custom |\n| Portability | Import/export of selected app + tweak IDs in a validated JSON profile; imported selections never execute automatically |
 | UI | Sidebar navigation, ambient animated gradients, morphing blob geometry, animated panel changes, global search (Ctrl+K), motion-off switch |
 | Web | Responsive CSS morphing visuals, interactive filter/searchable feature explorer, preview illustration, copyable commands and reduced-motion support |
 | Privacy | No telemetry, remote command source, or background analytics. Activity logs stay in the local user profile |
 
 **Catalogue counts do not imply that all actions are unique capabilities or that all Windows versions support every registry value.** Some shortcuts vary by Windows version, and individual WinGet packages may be unavailable in your region.
+
+## Large combined preset ribbon
+
+The scrollable preset ribbon stays above the current page, so you can switch setup profiles without losing your place. Choose a preset to populate the Applications and Tweaks checkboxes. The ribbon shows the live number of selected apps and tweaks and offers quick links to **Edit apps**, **Edit tweaks**, **Review setup**, and **Clear**.
+
+Selecting a profile has **zero system side effects**. Installations and registry changes are separate, individually confirmed operations. You can open **Review setup** to inspect the exact app and tweak names before running them.
+
+The **Custom** tile preserves existing selections. Manually checking or unchecking a package or tweak automatically switches the selection label to Custom. Importing a saved JSON profile likewise updates selections without applying them.
 
 ## Run & inspect
 
@@ -57,7 +65,7 @@ To apply a preset from the CLI, the script asks you to type `APPLY` unless `-Yes
 - `site.html`: standalone responsive promotional/docs page with CSS morphing animation and client-side filtering.
 - `worker.js`: Cloudflare edge router. It serves the PowerShell script at `/win`, the website at `/` and `/about`, and points to a commit-pinned GitHub source.
 - `LICENSE`: original MIT licence.
-- GitHub Actions runs PowerShell parsing, safe-preset dry-run and WPF-load smoke checks on Windows.
+- GitHub Actions runs PowerShell parsing, safe-preset dry-run, WPF-load smoke checks, combined preset selection assertions and a smoke run of the live PowerShell launcher on Windows.
 
 ## Safety & known limits
 
