@@ -22,12 +22,22 @@ try {
     (Get-FileHash -LiteralPath (Join-Path $target 'MarceliWin.ps1') -Algorithm SHA256).Hash){
   throw 'The installed script does not match the packaged script.'
  }
+ # Exercise the in-place upgrade path, not just a clean installation.
+ # Simulate an outdated installed payload then ensure the new setup replaces it.
+ Add-Content -LiteralPath (Join-Path $target 'MarceliWin.ps1') -Value '#stale-installed-payload' -Encoding UTF8
+ $upgrade=Start-Process -FilePath $full -ArgumentList '/S' -Wait -PassThru
+ if($upgrade.ExitCode -ne 0){throw ('In-place upgrade failed: '+$upgrade.ExitCode)}
+ if((Get-FileHash -LiteralPath $expected -Algorithm SHA256).Hash -ne
+    (Get-FileHash -LiteralPath (Join-Path $target 'MarceliWin.ps1') -Algorithm SHA256).Hash){
+  throw 'In-place upgrade did not restore the published script contents.'
+ }
+ if(!(Test-Path $sentinel)){throw 'Upgrade destroyed persistent recovery data.'}
  $uninstall=Start-Process -FilePath (Join-Path $target 'Uninstall.exe') -ArgumentList '/S' -Wait -PassThru
  if($uninstall.ExitCode -ne 0){throw ('Silent uninstall failed: '+$uninstall.ExitCode)}
  if(Test-Path (Join-Path $target 'MarceliWin.ps1')){throw 'The installed application survived uninstall.'}
  if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MarceliWin'){throw 'Uninstall registration was not deleted.'}
  if(!(Test-Path $sentinel)){throw 'User recovery data was improperly erased.'}
- Write-Host 'PASS: per-user install, shortcuts, script hash, uninstaller and user backup preservation.'
+ Write-Host 'PASS: install, in-place upgrade, shortcuts, script hash, uninstall and recovery-data preservation.'
 } finally {
  Remove-Item -LiteralPath $sentinel -Force -ErrorAction SilentlyContinue
 }
