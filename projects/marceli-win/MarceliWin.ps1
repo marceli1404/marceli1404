@@ -334,7 +334,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
   <Border Grid.Column="0" Background="#10192C" BorderBrush="#1F304D" BorderThickness="0,0,1,0">
    <DockPanel>
     <StackPanel DockPanel.Dock="Top" Margin="20,29,10,30">
-     <StackPanel Orientation="Horizontal"><TextBlock Text="◈" Foreground="#A5B4FC" FontSize="35" VerticalAlignment="Center"/><StackPanel Margin="10,0,0,0"><TextBlock Text="MARCELI" FontSize="20" FontWeight="Bold" LetterSpacing="0"/><TextBlock Text="WIN / TOOLKIT" Foreground="#A5B4FC" FontSize="11" FontWeight="SemiBold"/></StackPanel></StackPanel>
+     <StackPanel Orientation="Horizontal"><TextBlock Text="◈" Foreground="#A5B4FC" FontSize="35" VerticalAlignment="Center"/><StackPanel Margin="10,0,0,0"><TextBlock Text="MARCELI" FontSize="20" FontWeight="Bold"/><TextBlock Text="WIN / TOOLKIT" Foreground="#A5B4FC" FontSize="11" FontWeight="SemiBold"/></StackPanel></StackPanel>
      <Border Background="#233452" CornerRadius="12" Padding="10,6" HorizontalAlignment="Left" Margin="0,17,0,0"><TextBlock Text="PREVIEW 0.2  ·  OPEN SOURCE" FontSize="10" Foreground="#BFC8E8"/></Border>
     </StackPanel>
     <StackPanel DockPanel.Dock="Bottom" Margin="16,20">
