@@ -230,40 +230,25 @@ function LoadProfile {
  } catch {Log ('Import failed: '+$_.Exception.Message);return $null}
 }
 function RestoreBackup([switch]$NoPrompt) {
- if(!(Test-Path $script:BackupPath)){Log 'No last-batch registry backup found.';return}
+ $pending=PendingRegistryPath
+ $isPending=(Test-Path -LiteralPath $pending)
+ $source=if($isPending){$pending}else{$script:BackupPath}
+ if(!(Test-Path -LiteralPath $source)){Log 'No pending transaction or last-batch backup found.';return}
+ try {$records=@(ReadRegistryBackup $source)}
+ catch {Log ('Undo blocked; backup failed validation: '+$_.Exception.Message);return}
+ $label=if($isPending){'interrupted registry transaction'}else{'latest completed tweak batch'}
+ if(!$NoPrompt -and [Windows.MessageBox]::Show(
+  'Restore the '+$label+'? This will restore original saved values.'+
+  [Environment]::NewLine+'Settings changed by other programs since then may also be affected.',
+  'Marceli Win - Recovery','YesNo','Warning') -ne 'Yes'){return}
  try {
-  $raw=Get-Content -LiteralPath $script:BackupPath -Raw -ErrorAction Stop
-  if($raw.Length -gt 1024*1024){throw 'Unexpectedly large backup.'}
-  $records=@($raw|ConvertFrom-Json -ErrorAction Stop)
-  if(!$records.Count -or $records.Count -gt $script:Tweaks.Count){throw 'Invalid backup entry count.'}
-  # Backups are local files that may be edited by other software. Never trust arbitrary paths.
-  foreach($record in $records){
-   $matching=@($script:Tweaks|Where-Object {
-     $_.Path -eq $record.Path -and $_.Key -eq $record.Key
-   })
-   if($matching.Count -ne 1){throw ('Backup contains an unrecognised registry key: '+$record.Key)}
-   if([string]$record.Kind -notin @('DWord','QWord','String','ExpandString','Binary','MultiString')){
-    throw ('Unsupported saved registry type: '+$record.Kind)
-   }
-  }
- } catch {Log ('Undo blocked: '+$_.Exception.Message);return}
- if(!$NoPrompt -and [Windows.MessageBox]::Show('Undo the latest registry tweak batch? Other apps may have changed these settings since.','Marceli Win','YesNo','Warning') -ne 'Yes'){return}
- $failed=$false
- foreach($r in $records){
-  try {
-   if($r.Exists){
-    New-Item -Path $r.Path -Force -ErrorAction Stop|Out-Null
-    New-ItemProperty -Path $r.Path -Name $r.Key -PropertyType $r.Kind -Value $r.Value -Force -ErrorAction Stop|Out-Null
-   } elseif(Test-Path $r.Path){
-    Remove-ItemProperty -Path $r.Path -Name $r.Key -ErrorAction Stop
-   }
-   Log ('Restored: '+$r.Key)
-  } catch {$failed=$true;Log ('Undo failed: '+$r.Key+' - '+$_.Exception.Message)}
- }
- if(!$failed){Remove-Item -LiteralPath $script:BackupPath -Force;Log 'Last batch successfully undone.'}
- else {Log 'Some items failed. Keeping the backup for another attempt.'}
+  if(RestoreRegistryRecords $records){
+   Remove-Item -LiteralPath $source -Force -ErrorAction Stop
+   Log ('Recovered '+$label+'. A new tweak batch can now be applied.')
+  } else {Log 'Recovery was incomplete; the original backup remains available.'}
+ } catch {Log ('Recovery interrupted; backup retained: '+$_.Exception.Message)}
 }
-function RestoreLast { RestoreBackup }
+function RestoreLast {RestoreBackup}
 function MakeRestorePoint {
  if(!(IsAdmin)){
   [Windows.MessageBox]::Show('Open Windows PowerShell as Administrator to request a restore point.','Elevation needed')|Out-Null
