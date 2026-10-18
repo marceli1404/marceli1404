@@ -41,8 +41,8 @@ VIAddVersionKey "LegalCopyright" "Copyright 2026 Marceli Pawlinski. MIT."
 Section "Marceli Win (required)" SecMain
   SetShellVarContext current
   SetOutPath "$INSTDIR"
-  File "dist\\stage\\MarceliWin.ps1"
-  File "dist\\stage\\launcher.cmd"
+  File "${APPROOT}\dist\stage\MarceliWin.ps1"
+  File "${APPROOT}\dist\stage\launcher.cmd"
   File "${APPROOT}\LICENSE"
   File "${APPROOT}\installer\INSTALLATION.txt"
 
