@@ -182,9 +182,10 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
        </Border>
       </StackPanel>
       <StackPanel Name="PageRecovery" Visibility="Collapsed" Margin="0,8,12,12">
-       <TextBlock Text="Recover, export &amp; inspect." FontSize="21" FontWeight="Bold" Margin="4,0,0,14"/>
+       <TextBlock Text="Recover, export &amp; inspect." FontSize="21" FontWeight="Bold" Margin="4,0,0,8"/>
+       <Border Background="#31304F" BorderBrush="#7467B3" BorderThickness="1" CornerRadius="10" Padding="12" Margin="4,0,5,15"><TextBlock Name="RecoveryStatus" Foreground="#E8E2FF" TextWrapping="Wrap" Text="Checking your most recent backup..."/></Border>
        <WrapPanel>
-        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Undo last tweak batch" FontSize="17" FontWeight="Bold"/><TextBlock Text="Previous registry values are restored. Archived older batches stay local." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="Undo" Style="{StaticResource ActionButton}" Content="&#x21BA;  Undo last batch"/></StackPanel></Border>
+        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Undo and interrupted recovery" FontSize="17" FontWeight="Bold"/><TextBlock Text="Recover an interrupted transaction first, or undo the latest completed batch. Older backups remain local." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="Undo" Style="{StaticResource ActionButton}" Content="&#x21BA;  Recover / Undo"/></StackPanel></Border>
         <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Windows restore point" FontSize="17" FontWeight="Bold"/><TextBlock Text="Ask Windows to create a restore point. Requires admin and System Protection." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="RestorePoint" Style="{StaticResource ActionButton}" Content="&#xFF0B;  Create checkpoint"/></StackPanel></Border>
         <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Save your setup" FontSize="17" FontWeight="Bold"/><TextBlock Text="Share only the selected apps and tweaks. Import never applies them automatically." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><StackPanel Orientation="Horizontal"><Button Name="ExportProfile" Style="{StaticResource ActionButton}" Content="Export"/><Button Name="ImportProfile" Style="{StaticResource ActionButton}" Content="Import"/></StackPanel></StackPanel></Border>
         <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Diagnostics and logs" FontSize="17" FontWeight="Bold"/><TextBlock Text="Export a system summary or inspect local log and archived backups." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><StackPanel Orientation="Horizontal"><Button Name="ExportReport" Style="{StaticResource ActionButton}" Content="Report"/><Button Name="OpenData" Style="{StaticResource ActionButton}" Content="Data folder"/></StackPanel></StackPanel></Border>
@@ -564,7 +565,25 @@ function RefreshSystem {
 (El 'HomeApps').Add_Click({Page 'Apps'})
 (El 'HomeScan').Add_Click({Page 'Repair'})
 (El 'HomeReport').Add_Click({ExportReport})
-(El 'Undo').Add_Click({RestoreLast})
+function UpdateRecoveryStatus {
+ $pending=PendingRegistryPath
+ $status=El 'RecoveryStatus'
+ if(Test-Path -LiteralPath $pending){
+  try {
+   $entries=@(ReadRegistryBackup $pending)
+   $status.Text='ATTENTION: An interrupted tweak batch is waiting for recovery ('+$entries.Count+' saved settings). Use Recover / Undo before applying any new tweaks.'
+  } catch {
+   $status.Text='ATTENTION: The transaction journal failed validation. New changes are blocked; review the backup file and activity log before proceeding.'
+  }
+  return $true
+ }
+ if(Test-Path -LiteralPath $script:BackupPath){
+  $status.Text='The last completed tweak batch can be undone. Older backups are retained under the local data folder.'
+ } else {$status.Text='No interrupted changes or completed tweak backup found. You can safely prepare a new setup.'}
+ return $false
+}
+(El 'Undo').Add_Click({RestoreLast;[void](UpdateRecoveryStatus)})
+
 (El 'RestorePoint').Add_Click({MakeRestorePoint})
 (El 'ExportProfile').Add_Click({ExportProfile (SelectedApps) (SelectedTweaks)})
 (El 'ImportProfile').Add_Click({
@@ -589,6 +608,10 @@ $script:Window.Add_PreviewKeyDown({
  if($e.Key -eq 'Escape') {(El 'SearchBox').Text=''}
 })
 RefreshSystem
+if(UpdateRecoveryStatus){
+ Page 'Recovery'
+ Log 'Interrupted registry change detected. New tweak writes are blocked until it is recovered.'
+}
 Log ('Marceli Win preview ready  -  '+$script:Apps.Count+' app entries  -  '+$script:Tweaks.Count+' tweaks  -  '+$script:Actions.Count+' system tools. No changes made.')
 if($SmokeTest) {
  # The fake command has zero external side effects. Verify that the dispatcher
