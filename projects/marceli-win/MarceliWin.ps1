@@ -1,7 +1,9 @@
-﻿# Marceli Win 0.1 - Copyright (c) 2026 Marceli Pawlinski. MIT.
+# Marceli Win 0.1 - Copyright (c) 2026 Marceli Pawlinski. MIT.
 # Review downloaded scripts before running. No telemetry or secondary code downloads.
 param([ValidateSet('','Safe','Balanced','Gaming','Developer','Privacy','Focus','Accessibility')][string]$Preset='', [switch]$WhatIf, [switch]$Yes, [switch]$SmokeTest)
 $ErrorActionPreference='Stop'
+# Optional CI-only smoke flag exercises the EXACT streamed irm | iex launch path.
+if ($env:MARCELI_WIN_SMOKE_TEST -eq '1') { $SmokeTest = $true }
 if ($env:OS -ne 'Windows_NT') { throw 'Marceli Win requires Windows.' }
 $script:Data=Join-Path $env:LOCALAPPDATA 'MarceliWin'
 New-Item -Path $script:Data -ItemType Directory -Force | Out-Null
@@ -223,7 +225,7 @@ function RunAction([string]$id) {
   [Windows.MessageBox]::Show('This operation needs an elevated PowerShell session.','Administrator required')|Out-Null
   return
  }
- $answer=[Windows.MessageBox]::Show('Run this reviewed Windows command?'+[Environment]::NewLine+$command,'Marceli Win • Confirm','YesNo','Question')
+ $answer=[Windows.MessageBox]::Show('Run this reviewed Windows command?'+[Environment]::NewLine+$command,'Marceli Win  -  Confirm','YesNo','Question')
  if ($answer -ne 'Yes') {return}
  Log ('Running '+$command)
  try {
@@ -305,7 +307,7 @@ if($Preset) { Apply $script:Presets[$Preset];return }
 Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
 [xml]$ui=@'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Title="Marceli Win · Preview 0.2" Width="1270" Height="845" MinWidth="1060" MinHeight="700"
+ Title="Marceli Win &#xB7; Preview 0.2" Width="1270" Height="845" MinWidth="1060" MinHeight="700"
  Background="#090E1B" Foreground="#E2E8F0" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="13">
  <Window.Resources>
   <Style x:Key="NavButton" TargetType="Button">
@@ -334,27 +336,27 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
   <Border Grid.Column="0" Background="#10192C" BorderBrush="#1F304D" BorderThickness="0,0,1,0">
    <DockPanel>
     <StackPanel DockPanel.Dock="Top" Margin="20,29,10,30">
-     <StackPanel Orientation="Horizontal"><TextBlock Text="◈" Foreground="#A5B4FC" FontSize="35" VerticalAlignment="Center"/><StackPanel Margin="10,0,0,0"><TextBlock Text="MARCELI" FontSize="20" FontWeight="Bold"/><TextBlock Text="WIN / TOOLKIT" Foreground="#A5B4FC" FontSize="11" FontWeight="SemiBold"/></StackPanel></StackPanel>
-     <Border Background="#233452" CornerRadius="12" Padding="10,6" HorizontalAlignment="Left" Margin="0,17,0,0"><TextBlock Text="PREVIEW 0.2  ·  OPEN SOURCE" FontSize="10" Foreground="#BFC8E8"/></Border>
+     <StackPanel Orientation="Horizontal"><TextBlock Text="&#x25C8;" Foreground="#A5B4FC" FontSize="35" VerticalAlignment="Center"/><StackPanel Margin="10,0,0,0"><TextBlock Text="MARCELI" FontSize="20" FontWeight="Bold"/><TextBlock Text="WIN / TOOLKIT" Foreground="#A5B4FC" FontSize="11" FontWeight="SemiBold"/></StackPanel></StackPanel>
+     <Border Background="#233452" CornerRadius="12" Padding="10,6" HorizontalAlignment="Left" Margin="0,17,0,0"><TextBlock Text="PREVIEW 0.2  &#xB7;  OPEN SOURCE" FontSize="10" Foreground="#BFC8E8"/></Border>
     </StackPanel>
     <StackPanel DockPanel.Dock="Bottom" Margin="16,20">
      <Border Background="#192842" CornerRadius="13" Padding="12"><StackPanel>
       <TextBlock Text="SYSTEM MODE" FontWeight="Bold" Foreground="#A5B4FC" FontSize="10"/>
-      <TextBlock Name="AdminStatus" Text="Checking Windows…" Margin="0,6,0,0" FontSize="12"/>
-      <TextBlock Text="No telemetry · local changes" Foreground="#91A3C3" FontSize="10" Margin="0,6,0,0"/>
+      <TextBlock Name="AdminStatus" Text="Checking Windows&#x2026;" Margin="0,6,0,0" FontSize="12"/>
+      <TextBlock Text="No telemetry &#xB7; local changes" Foreground="#91A3C3" FontSize="10" Margin="0,6,0,0"/>
      </StackPanel></Border>
-     <Button Name="MotionToggle" Style="{StaticResource NavButton}" Content="◌  Motion: on" Margin="0,12,0,0"/>
+     <Button Name="MotionToggle" Style="{StaticResource NavButton}" Content="&#x25CC;  Motion: on" Margin="0,12,0,0"/>
     </StackPanel>
     <StackPanel Name="NavList" Margin="0,125,0,0">
-     <Button Name="NavHome" Tag="Home" Style="{StaticResource NavButton}" Content="⌂   Overview"/>
-     <Button Name="NavApps" Tag="Apps" Style="{StaticResource NavButton}" Content="▦   Applications"/>
-     <Button Name="NavTweaks" Tag="Tweaks" Style="{StaticResource NavButton}" Content="✦   Tweaks &amp; privacy"/>
-     <Button Name="NavGaming" Tag="Gaming" Style="{StaticResource NavButton}" Content="◆   Gaming lab"/>
-     <Button Name="NavNetwork" Tag="Network" Style="{StaticResource NavButton}" Content="⌁   Network lab"/>
-     <Button Name="NavRepair" Tag="Repair" Style="{StaticResource NavButton}" Content="⚒   Repair centre"/>
-     <Button Name="NavTools" Tag="Tools" Style="{StaticResource NavButton}" Content="▤   System tools"/>
-     <Button Name="NavProfiles" Tag="Profiles" Style="{StaticResource NavButton}" Content="◈   Smart profiles"/>
-     <Button Name="NavRecovery" Tag="Recovery" Style="{StaticResource NavButton}" Content="↺   Recovery"/>
+     <Button Name="NavHome" Tag="Home" Style="{StaticResource NavButton}" Content="&#x2302;   Overview"/>
+     <Button Name="NavApps" Tag="Apps" Style="{StaticResource NavButton}" Content="&#x25A6;   Applications"/>
+     <Button Name="NavTweaks" Tag="Tweaks" Style="{StaticResource NavButton}" Content="&#x2726;   Tweaks &amp; privacy"/>
+     <Button Name="NavGaming" Tag="Gaming" Style="{StaticResource NavButton}" Content="&#x25C6;   Gaming lab"/>
+     <Button Name="NavNetwork" Tag="Network" Style="{StaticResource NavButton}" Content="&#x2301;   Network lab"/>
+     <Button Name="NavRepair" Tag="Repair" Style="{StaticResource NavButton}" Content="&#x2692;   Repair centre"/>
+     <Button Name="NavTools" Tag="Tools" Style="{StaticResource NavButton}" Content="&#x25A4;   System tools"/>
+     <Button Name="NavProfiles" Tag="Profiles" Style="{StaticResource NavButton}" Content="&#x25C8;   Smart profiles"/>
+     <Button Name="NavRecovery" Tag="Recovery" Style="{StaticResource NavButton}" Content="&#x21BA;   Recovery"/>
     </StackPanel>
    </DockPanel>
   </Border>
@@ -375,7 +377,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       <TextBlock Name="PageSubheading" FontSize="12" Foreground="#94A3B8" Text="Personal Windows control center"/>
      </StackPanel>
      <Border Grid.Column="1" Background="#1A2740" BorderBrush="#304361" BorderThickness="1" CornerRadius="13" Height="40" VerticalAlignment="Top">
-      <DockPanel Margin="12,6"><TextBlock DockPanel.Dock="Left" Text="⌕" FontSize="20" Margin="0,-2,8,0" Foreground="#B7C1E9"/><TextBox Name="SearchBox" Background="Transparent" BorderThickness="0" Foreground="White" CaretBrush="White" FontSize="13" VerticalContentAlignment="Center" ToolTip="Search apps or tweaks (Ctrl+K)"/></DockPanel>
+      <DockPanel Margin="12,6"><TextBlock DockPanel.Dock="Left" Text="&#x2315;" FontSize="20" Margin="0,-2,8,0" Foreground="#B7C1E9"/><TextBox Name="SearchBox" Background="Transparent" BorderThickness="0" Foreground="White" CaretBrush="White" FontSize="13" VerticalContentAlignment="Center" ToolTip="Search apps or tweaks (Ctrl+K)"/></DockPanel>
      </Border>
     </Grid>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -385,18 +387,18 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
         <StackPanel><TextBlock Text="WELCOME TO YOUR WINDOWS" Foreground="#BFC9FF" FontSize="11" FontWeight="Bold"/>
          <TextBlock Text="Make your PC feel yours." FontSize="30" FontWeight="Bold" Foreground="White" Margin="0,8,0,4"/>
          <TextBlock Text="One dashboard. Complete visibility. Deliberate changes." FontSize="14" Foreground="#D3D8F0"/>
-         <StackPanel Orientation="Horizontal" Margin="0,18,0,0"><Button Name="HomeApps" Style="{StaticResource ActionButton}" Content="Browse apps  →"/><Button Name="HomeScan" Style="{StaticResource ActionButton}" Content="System diagnostics  →"/><Button Name="HomeReport" Style="{StaticResource ActionButton}" Content="Export report  ↗"/></StackPanel>
+         <StackPanel Orientation="Horizontal" Margin="0,18,0,0"><Button Name="HomeApps" Style="{StaticResource ActionButton}" Content="Browse apps  &#x2192;"/><Button Name="HomeScan" Style="{StaticResource ActionButton}" Content="System diagnostics  &#x2192;"/><Button Name="HomeReport" Style="{StaticResource ActionButton}" Content="Export report  &#x2197;"/></StackPanel>
         </StackPanel>
        </Border>
        <TextBlock Text="YOUR MACHINE" Style="{StaticResource SectionTitle}" Margin="5,5,0,8"/>
-       <Border Style="{StaticResource GlassCard}"><StackPanel><TextBlock Name="SysInfo" TextWrapping="Wrap" LineHeight="28" FontSize="14"/><Button Name="Refresh" Style="{StaticResource ActionButton}" Content="↻  Refresh metrics" HorizontalAlignment="Left" Margin="0,14,0,0"/></StackPanel></Border>
+       <Border Style="{StaticResource GlassCard}"><StackPanel><TextBlock Name="SysInfo" TextWrapping="Wrap" LineHeight="28" FontSize="14"/><Button Name="Refresh" Style="{StaticResource ActionButton}" Content="&#x21BB;  Refresh metrics" HorizontalAlignment="Left" Margin="0,14,0,0"/></StackPanel></Border>
        <TextBlock Text="QUICK ACCESS" Style="{StaticResource SectionTitle}" Margin="5,22,0,6"/>
        <WrapPanel Name="QuickPanel"/>
       </StackPanel>
       <StackPanel Name="PageApps" Visibility="Collapsed" Margin="0,8,12,12">
        <TextBlock Text="Find your apps. Install only what you want." Foreground="#9DACCD" FontSize="14" Margin="5,2,0,14"/>
        <Border Style="{StaticResource GlassCard}"><DockPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0"><Button Name="SelectAllApps" Style="{StaticResource ActionButton}" Content="Select visible"/><Button Name="ClearApps" Style="{StaticResource ActionButton}" Content="Clear"/><Button Name="Install" Style="{StaticResource ActionButton}" Content="Install selected  →"/></StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0"><Button Name="SelectAllApps" Style="{StaticResource ActionButton}" Content="Select visible"/><Button Name="ClearApps" Style="{StaticResource ActionButton}" Content="Clear"/><Button Name="Install" Style="{StaticResource ActionButton}" Content="Install selected  &#x2192;"/></StackPanel>
         <WrapPanel Name="AppsPanel"/>
        </DockPanel></Border>
        <TextBlock Name="AppCount" Foreground="#9DACCD" Margin="10"/>
@@ -404,13 +406,13 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       <StackPanel Name="PageTweaks" Visibility="Collapsed" Margin="0,8,12,12">
        <TextBlock Text="Individual settings. Understand them, preview them, undo them." Foreground="#9DACCD" FontSize="14" Margin="5,2,0,14"/>
        <Border Style="{StaticResource GlassCard}"><DockPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0"><Button Name="Preview" Style="{StaticResource ActionButton}" Content="Preview"/><Button Name="Apply" Style="{StaticResource ActionButton}" Content="Apply selected  →"/></StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0"><Button Name="Preview" Style="{StaticResource ActionButton}" Content="Preview"/><Button Name="Apply" Style="{StaticResource ActionButton}" Content="Apply selected  &#x2192;"/></StackPanel>
         <WrapPanel Name="TweaksPanel"/>
        </DockPanel></Border>
        <TextBlock Name="TweakCount" Foreground="#9DACCD" Margin="10"/>
       </StackPanel>
       <StackPanel Name="PageGaming" Visibility="Collapsed" Margin="0,8,12,12">
-       <Border CornerRadius="18" Background="#26265D" Padding="20" Margin="0,0,0,12"><StackPanel><TextBlock Text="GAME LAB" Foreground="#A5B4FC" FontWeight="Bold"/><TextBlock Text="Gaming, without risky debloat scripts." FontSize="23" FontWeight="Bold" Margin="0,9,0,3"/><TextBlock Text="Game Mode, captures, graphics, HDR, audio and DirectX tools — no anti-cheat tampering." Foreground="#B9C3DA" TextWrapping="Wrap"/><Button Name="GamingPreset" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Content="Preview Gaming profile" Margin="0,15,0,0"/></StackPanel></Border>
+       <Border CornerRadius="18" Background="#26265D" Padding="20" Margin="0,0,0,12"><StackPanel><TextBlock Text="GAME LAB" Foreground="#A5B4FC" FontWeight="Bold"/><TextBlock Text="Gaming, without risky debloat scripts." FontSize="23" FontWeight="Bold" Margin="0,9,0,3"/><TextBlock Text="Game Mode, captures, graphics, HDR, audio and DirectX tools &#x2014; no anti-cheat tampering." Foreground="#B9C3DA" TextWrapping="Wrap"/><Button Name="GamingPreset" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Content="Preview Gaming profile" Margin="0,15,0,0"/></StackPanel></Border>
        <WrapPanel Name="GamingPanel"/>
       </StackPanel>
       <StackPanel Name="PageNetwork" Visibility="Collapsed" Margin="0,8,12,12">
@@ -442,8 +444,8 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       <StackPanel Name="PageRecovery" Visibility="Collapsed" Margin="0,8,12,12">
        <TextBlock Text="Recover, export &amp; inspect." FontSize="21" FontWeight="Bold" Margin="4,0,0,14"/>
        <WrapPanel>
-        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Undo last tweak batch" FontSize="17" FontWeight="Bold"/><TextBlock Text="Previous registry values are restored. Archived older batches stay local." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="Undo" Style="{StaticResource ActionButton}" Content="↺  Undo last batch"/></StackPanel></Border>
-        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Windows restore point" FontSize="17" FontWeight="Bold"/><TextBlock Text="Ask Windows to create a restore point. Requires admin and System Protection." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="RestorePoint" Style="{StaticResource ActionButton}" Content="＋  Create checkpoint"/></StackPanel></Border>
+        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Undo last tweak batch" FontSize="17" FontWeight="Bold"/><TextBlock Text="Previous registry values are restored. Archived older batches stay local." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="Undo" Style="{StaticResource ActionButton}" Content="&#x21BA;  Undo last batch"/></StackPanel></Border>
+        <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Windows restore point" FontSize="17" FontWeight="Bold"/><TextBlock Text="Ask Windows to create a restore point. Requires admin and System Protection." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><Button Name="RestorePoint" Style="{StaticResource ActionButton}" Content="&#xFF0B;  Create checkpoint"/></StackPanel></Border>
         <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Save your setup" FontSize="17" FontWeight="Bold"/><TextBlock Text="Share only the selected apps and tweaks. Import never applies them automatically." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><StackPanel Orientation="Horizontal"><Button Name="ExportProfile" Style="{StaticResource ActionButton}" Content="Export"/><Button Name="ImportProfile" Style="{StaticResource ActionButton}" Content="Import"/></StackPanel></StackPanel></Border>
         <Border Style="{StaticResource GlassCard}" Width="330"><StackPanel><TextBlock Text="Diagnostics and logs" FontSize="17" FontWeight="Bold"/><TextBlock Text="Export a system summary or inspect local log and archived backups." TextWrapping="Wrap" Foreground="#9FAEC8" Margin="0,8,0,12"/><StackPanel Orientation="Horizontal"><Button Name="ExportReport" Style="{StaticResource ActionButton}" Content="Report"/><Button Name="OpenData" Style="{StaticResource ActionButton}" Content="Data folder"/></StackPanel></StackPanel></Border>
        </WrapPanel>
@@ -451,7 +453,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
      </Grid>
     </ScrollViewer>
     <Border Grid.Row="2" Background="#131E32" CornerRadius="14" BorderBrush="#2A395A" BorderThickness="1" Padding="13" Margin="0,12,0,0">
-     <DockPanel><DockPanel DockPanel.Dock="Top" Margin="2,0,0,8"><TextBlock Text="●  LIVE LOCAL ACTIVITY" FontSize="11" FontWeight="Bold" Foreground="#8FDBDA"/><TextBlock Name="StatusText" Text="Ready" DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="#8EA1C5" FontSize="11"/></DockPanel>
+     <DockPanel><DockPanel DockPanel.Dock="Top" Margin="2,0,0,8"><TextBlock Text="&#x25CF;  LIVE LOCAL ACTIVITY" FontSize="11" FontWeight="Bold" Foreground="#8FDBDA"/><TextBlock Name="StatusText" Text="Ready" DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="#8EA1C5" FontSize="11"/></DockPanel>
       <TextBox Name="LogText" Background="#0D1525" Foreground="#C0F2E5" BorderThickness="0" FontFamily="Consolas" FontSize="11" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
      </DockPanel>
     </Border>
@@ -494,7 +496,8 @@ function Page([string]$id) {
 }
 function AnimateMorph {
  $blob=El 'MorphShape'
- $geometry=[Windows.Media.PathGeometry]$blob.Data.Clone()
+ $geometry=[Windows.Media.PathGeometry]::CreateFromGeometry($blob.Data)
+ if ($geometry.Figures.Count -lt 1 -or $geometry.Figures[0].Segments.Count -lt 1) { throw 'Morph path has no editable segments.' }
  $blob.Data=$geometry
  $seg=$geometry.Figures[0].Segments[0]
  $point=[Windows.Media.Animation.PointAnimation]::new()
@@ -524,10 +527,16 @@ function StopMorph {
  }
  $script:MotionTargets=@()
 }
-if([Windows.SystemParameters]::MenuAnimation){AnimateMorph} else {$script:MotionEnabled=$false;(El 'MotionToggle').Content='◌  Motion: off'}
+if ($SmokeTest) {
+ AnimateMorph
+ StopMorph
+ $script:MotionEnabled=$false
+} elseif ([Windows.SystemParameters]::MenuAnimation) {
+ try { AnimateMorph } catch { StopMorph; $script:MotionEnabled=$false; Log ('Motion disabled: '+$_.Exception.Message) }
+} else { $script:MotionEnabled=$false; (El 'MotionToggle').Content='Motion: off' }
 (El 'MotionToggle').Add_Click({
- if($script:MotionEnabled){StopMorph;$script:MotionEnabled=$false;(El 'MotionToggle').Content='◌  Motion: off'}
- else {AnimateMorph;$script:MotionEnabled=$true;(El 'MotionToggle').Content='◌  Motion: on'}
+ if($script:MotionEnabled){StopMorph;$script:MotionEnabled=$false;(El 'MotionToggle').Content='Motion  Motion: off'}
+ else {AnimateMorph;$script:MotionEnabled=$true;(El 'MotionToggle').Content='Motion  Motion: on'}
 })
 foreach($name in $script:PageNames) {
  $nav=El ('Nav'+$name)
@@ -552,7 +561,7 @@ function NewCard([string]$title,[string]$detail,[string]$tag,[string]$group,[str
  $check.FontWeight='SemiBold'
  $check.ToolTip=$detail
  $caption=[Windows.Controls.TextBlock]::new()
- $caption.Text=$group+'  •  '+$detail
+ $caption.Text=$group+'   -   '+$detail
  $caption.Foreground=[Windows.Media.BrushConverter]::new().ConvertFromString('#9CACCC')
  $caption.FontSize=11
  $caption.TextWrapping='Wrap'
@@ -608,7 +617,7 @@ function SelectedTweaks { @($script:TweakBoxes|Where-Object {$_.Check.IsChecked 
 function SelectedPreset { [string](El 'Preset').SelectedItem.Content }
 function UpdatePresetSummary {
  $ids=$script:Presets[(SelectedPreset)]
- (El 'PresetSummary').Text=(SelectedPreset)+': '+(($script:Tweaks|Where-Object {$ids -contains $_.ID}|ForEach-Object {$_.Name}) -join '  •  ')
+ (El 'PresetSummary').Text=(SelectedPreset)+': '+(($script:Tweaks|Where-Object {$ids -contains $_.ID}|ForEach-Object {$_.Name}) -join '   -   ')
 }
 (El 'Preset').Add_SelectionChanged({UpdatePresetSummary})
 UpdatePresetSummary
@@ -632,7 +641,7 @@ function NewActionCard($act,[string]$target) {
  $desc.Foreground=[Windows.Media.BrushConverter]::new().ConvertFromString('#9EAFCE')
  $desc.Margin=[Windows.Thickness]::new(0,7,0,10);$desc.TextWrapping='Wrap'
  $button=[Windows.Controls.Button]::new()
- $button.Content=if($act.Kind -eq 'open'){'Open ↗'}else{'Review & run →'}
+ $button.Content=if($act.Kind -eq 'open'){'Open  (open)'}else{'Review & run  > '}
  $button.Tag=$act.ID
  $button.Style=$script:Window.FindResource('ActionButton')
  $button.HorizontalAlignment='Left'
@@ -654,10 +663,10 @@ function RefreshSystem {
   $drive=Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
   $memory=[math]::Round($os.TotalVisibleMemorySize/1MB,1)
   $free=if($drive){[math]::Round($drive.FreeSpace/1GB,1).ToString()+' GB'}else{'N/A'}
-  (El 'SysInfo').Text='WINDOWS   '+$os.Caption+' · Build '+$os.BuildNumber+[Environment]::NewLine+
+  (El 'SysInfo').Text='WINDOWS   '+$os.Caption+'  -  Build '+$os.BuildNumber+[Environment]::NewLine+
    'PROCESSOR   '+$cpu.Name+[Environment]::NewLine+
    'GRAPHICS   '+$gpu.Name+[Environment]::NewLine+
-   'MEMORY   '+$memory+' GB   •   DISK C: FREE   '+$free+[Environment]::NewLine+
+   'MEMORY   '+$memory+' GB    -    DISK C: FREE   '+$free+[Environment]::NewLine+
    'UPTIME   '+((Get-Date)-$os.LastBootUpTime).ToString('dd\.hh\:mm')+[Environment]::NewLine+
    'ADMINISTRATOR   '+(IsAdmin)
   (El 'AdminStatus').Text=if(IsAdmin){'Elevated mode'}else{'Standard user'}
@@ -690,7 +699,7 @@ $script:Window.Add_PreviewKeyDown({
  if($e.Key -eq 'Escape') {(El 'SearchBox').Text=''}
 })
 RefreshSystem
-Log ('Marceli Win preview ready • '+$script:Apps.Count+' app entries · '+$script:Tweaks.Count+' tweaks · '+$script:Actions.Count+' system tools. No changes made.')
+Log ('Marceli Win preview ready  -  '+$script:Apps.Count+' app entries  -  '+$script:Tweaks.Count+' tweaks  -  '+$script:Actions.Count+' system tools. No changes made.')
 if($SmokeTest) {
  foreach($name in $script:PageNames) {if(!(El ('Page'+$name))){throw ('Missing page '+$name)}}
  StopMorph
