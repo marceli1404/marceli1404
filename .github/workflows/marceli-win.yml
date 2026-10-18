@@ -20,20 +20,44 @@ jobs:
             $errors | Format-List | Out-String | Write-Error
             exit 1
           }
-      - name: Check safe preset has no side effects in preview
+      - name: Preview safe preset without changing Windows
         shell: powershell
         run: |
           & '.\projects\marceli-win\MarceliWin.ps1' -Preset Safe -WhatIf
-
-      - name: Load WPF interface in a Windows smoke test
+      - name: Smoke test morphing WPF interface and navigation
         shell: powershell
         run: |
           & '.\projects\marceli-win\MarceliWin.ps1' -SmokeTest
-      - name: Smoke test Cloudflare endpoint without executing remote code
+      - name: Validate website JavaScript and Worker syntax
         shell: pwsh
         run: |
-          $uri = 'https://win.marceli.dev/win'
-          $resp = Invoke-WebRequest -Uri $uri -TimeoutSec 25 -ErrorAction Stop
-          if ($resp.StatusCode -ne 200) { throw "Unexpected HTTP $($resp.StatusCode)" }
-          if ($resp.Content.Length -lt 3000 -or !$resp.Content.Contains('Marceli Win')) { throw 'Hosted PowerShell is missing or invalid' }
-          Write-Host 'Existing public launcher responds with PowerShell (preview deployment is separately pinned)'
+          $html = Get-Content 'projects/marceli-win/site.html' -Raw
+          $script = [regex]::Match($html, '(?s)<script>(.*?)</script>')
+          if (!$script.Success) { throw 'Site JavaScript not found' }
+          $file = Join-Path $env:RUNNER_TEMP 'marceli-site.mjs'
+          [IO.File]::WriteAllText($file, $script.Groups[1].Value, [Text.Encoding]::UTF8)
+          node --check $file
+          node --check 'projects/marceli-win/worker.js'
+          if (!$html.Contains('prefers-reduced-motion')) { throw 'Site must support reduced motion' }
+      - name: Smoke test live pinned launcher and animated website
+        shell: pwsh
+        run: |
+          $worker = Get-Content 'projects/marceli-win/worker.js' -Raw
+          $match = [regex]::Match($worker, 'const SOURCE_COMMIT = "([0-9a-f]{40})"')
+          if (!$match.Success) { throw 'Worker must use a pinned source commit' }
+          $pin = $match.Groups[1].Value
+          $origin = "https://raw.githubusercontent.com/marceli1404/marceli1404/$pin/projects/marceli-win"
+          $checks = @(
+            @{Path='MarceliWin.ps1';Url='https://win.marceli.dev/win'},
+            @{Path='site.html';Url='https://win.marceli.dev/about'}
+          )
+          foreach ($check in $checks) {
+            $sourceFile = Join-Path $env:RUNNER_TEMP ('source-' + $check.Path)
+            $liveFile = Join-Path $env:RUNNER_TEMP ('live-' + $check.Path)
+            Invoke-WebRequest "$origin/$($check.Path)" -OutFile $sourceFile -TimeoutSec 30 -ErrorAction Stop
+            Invoke-WebRequest $check.Url -OutFile $liveFile -TimeoutSec 30 -ErrorAction Stop
+            $expected = (Get-FileHash $sourceFile -Algorithm SHA256).Hash
+            $actual = (Get-FileHash $liveFile -Algorithm SHA256).Hash
+            if ($expected -ne $actual) { throw "$($check.Url) does not match pinned source ($pin)" }
+            Write-Host "$($check.Url) exactly matches pinned source"
+          }
