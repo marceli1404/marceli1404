@@ -116,6 +116,24 @@ $script:Presets=@{
  Focus=@('tips','widgets','taskview','darkapps','darkshell','explorercompact')
  Accessibility=@('extensions','statusbar','noconflicts','noanimations')
 }
+
+# Presets describe selections ONLY. Selecting a tile never executes installs or registry actions.
+# App IDs must exist in $script:Apps; tweak IDs are the existing reversible presets.
+$script:SetupPresets=[ordered]@{
+ Safe=@{Apps=@('Mozilla.Firefox','7zip.7zip','Microsoft.PowerToys');Desc='Essential apps and the safest Windows preferences.';Tag='ESSENTIALS'}
+ Balanced=@{Apps=@('Mozilla.Firefox','7zip.7zip','Microsoft.PowerToys','VideoLAN.VLC','Notepad++.Notepad++','voidtools.Everything');Desc='A good default for everyday work and browsing.';Tag='EVERYDAY'}
+ Gaming=@{Apps=@('Valve.Steam','Discord.Discord','OBSProject.OBSStudio','EpicGames.EpicGamesLauncher','7zip.7zip');Desc='Launchers, capture software and guarded gaming settings.';Tag='PLAY'}
+ Developer=@{Apps=@('Microsoft.VisualStudioCode','Git.Git','OpenJS.NodeJS.LTS','Microsoft.WindowsTerminal','Docker.DockerDesktop','Microsoft.PowerShell','Python.Python.3.12','GitHub.GitHubDesktop');Desc='An engineering workstation with build tools and editors.';Tag='BUILD'}
+ Privacy=@{Apps=@('Brave.Brave','Bitwarden.Bitwarden','KeePassXC.KeePassXC','Mozilla.Firefox');Desc='Privacy-friendly software and per-user preference controls.';Tag='PRIVATE'}
+ Focus=@{Apps=@('Obsidian.Obsidian','Notion.Notion','SumatraPDF.SumatraPDF','Microsoft.PowerToys');Desc='A distraction-light work environment.';Tag='FOCUS'}
+ Accessibility=@{Apps=@('Mozilla.Firefox','Microsoft.PowerToys','SumatraPDF.SumatraPDF');Desc='Visibility and usability settings with practical everyday apps.';Tag='COMFORT'}
+}
+foreach($name in @($script:SetupPresets.Keys)) {
+ if (!$script:Presets.ContainsKey($name)) {throw ('Missing tweak preset '+$name)}
+ foreach($id in $script:SetupPresets[$name].Apps) {
+  if (!(@($script:Apps|Where-Object {$_.ID -eq $id}).Count)) {throw ('Unknown preset app: '+$id)}
+ }
+}
 function Snapshot($t) {
  $exists=$false;$old=$null;$kind='DWord'
  if (Test-Path $t.Path) {
@@ -369,7 +387,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
     </Path>
    </Canvas>
    <Grid Margin="28,20,28,18">
-    <Grid.RowDefinitions><RowDefinition Height="66"/><RowDefinition Height="*"/><RowDefinition Height="136"/></Grid.RowDefinitions>
+    <Grid.RowDefinitions><RowDefinition Height="66"/><RowDefinition Height="188"/><RowDefinition Height="*"/><RowDefinition Height="136"/></Grid.RowDefinitions>
     <Grid Grid.Row="0">
      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="246"/></Grid.ColumnDefinitions>
      <StackPanel>
@@ -380,7 +398,29 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       <DockPanel Margin="12,6"><TextBlock DockPanel.Dock="Left" Text="&#x2315;" FontSize="20" Margin="0,-2,8,0" Foreground="#B7C1E9"/><TextBox Name="SearchBox" Background="Transparent" BorderThickness="0" Foreground="White" CaretBrush="White" FontSize="13" VerticalContentAlignment="Center" ToolTip="Search apps or tweaks (Ctrl+K)"/></DockPanel>
      </Border>
     </Grid>
-    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Border Grid.Row="1" Background="#17243C" BorderBrush="#384A78" BorderThickness="1" CornerRadius="18" Padding="13" Margin="0,0,0,10">
+     <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="31"/><RowDefinition Height="88"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+      <DockPanel Grid.Row="0">
+       <TextBlock DockPanel.Dock="Left" Text="YOUR PRESETS" FontSize="16" FontWeight="Bold" Foreground="#E3E9FF"/>
+       <TextBlock Text="Select a profile, then customise apps and tweaks. Nothing runs automatically." FontSize="11" Foreground="#9FABCB" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+      </DockPanel>
+      <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
+       <StackPanel Name="PresetRibbon" Orientation="Horizontal" Margin="0,2,0,0"/>
+      </ScrollViewer>
+      <Grid Grid.Row="2" Margin="3,5,0,0">
+       <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <TextBlock Name="SelectionCounter" Text="Choose a preset or pick apps and tweaks manually" Foreground="#BCCCF2" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis"/>
+       <StackPanel Grid.Column="1" Orientation="Horizontal">
+        <Button Name="RibbonApps" Style="{StaticResource ActionButton}" Padding="11,6" Content="Edit apps"/>
+        <Button Name="RibbonTweaks" Style="{StaticResource ActionButton}" Padding="11,6" Content="Edit tweaks"/>
+        <Button Name="RibbonReview" Style="{StaticResource ActionButton}" Padding="11,6" Background="#4D45A0" Content="Review setup"/>
+        <Button Name="RibbonClear" Style="{StaticResource ActionButton}" Padding="11,6" Content="Clear"/>
+       </StackPanel>
+      </Grid>
+     </Grid>
+    </Border>
+    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
      <Grid Name="ContentGrid">
       <StackPanel Name="PageHome" Margin="0,8,12,12">
        <Border CornerRadius="22" Padding="26" Background="#30276A" BorderBrush="#5E5AA8" BorderThickness="1" Margin="0,4,0,15">
@@ -431,15 +471,38 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
        <WrapPanel Name="ToolsPanel"/>
       </StackPanel>
       <StackPanel Name="PageProfiles" Visibility="Collapsed" Margin="0,8,12,12">
-       <TextBlock Text="One-click profiles, fully previewable." FontSize="21" FontWeight="Bold" Margin="4,0,0,13"/>
-       <Border Style="{StaticResource GlassCard}"><StackPanel>
-        <TextBlock Text="CHOOSE A WORKFLOW" Foreground="#A5B4FC" FontWeight="Bold" Margin="0,0,0,10"/>
-        <ComboBox Name="Preset" Height="38" Width="290" HorizontalAlignment="Left" SelectedIndex="0">
-         <ComboBoxItem Content="Safe"/><ComboBoxItem Content="Balanced"/><ComboBoxItem Content="Gaming"/><ComboBoxItem Content="Developer"/><ComboBoxItem Content="Privacy"/><ComboBoxItem Content="Focus"/><ComboBoxItem Content="Accessibility"/>
-        </ComboBox>
-        <TextBlock Name="PresetSummary" TextWrapping="Wrap" Margin="0,18,0,14" Foreground="#BCC8E1"/>
-        <StackPanel Orientation="Horizontal"><Button Name="PreviewPreset" Style="{StaticResource ActionButton}" Content="Preview profile"/><Button Name="ApplyPreset" Style="{StaticResource ActionButton}" Content="Apply profile"/></StackPanel>
-       </StackPanel></Border>
+       <TextBlock Text="Build your own setup." FontSize="24" FontWeight="Bold" Margin="4,0,0,9"/>
+       <TextBlock Text="Click any preset in the large bar above, then adjust individual apps and tweaks. Your choices are not executed until you confirm." Foreground="#A4B4D0" FontSize="13" TextWrapping="Wrap" Margin="4,0,8,16"/>
+       <Border Background="#242858" CornerRadius="17" Padding="18" Margin="0,0,0,12">
+        <StackPanel>
+         <TextBlock Name="ProfileName" Text="Custom setup" FontSize="21" Foreground="#E8ECFF" FontWeight="Bold"/>
+         <TextBlock Name="ProfileDescription" TextWrapping="Wrap" Foreground="#B2C0E6" Margin="0,4,0,14"/>
+         <StackPanel Orientation="Horizontal">
+          <Button Name="ProfileEditApps" Style="{StaticResource ActionButton}" Content="Choose apps"/>
+          <Button Name="ProfileEditTweaks" Style="{StaticResource ActionButton}" Content="Choose tweaks"/>
+          <Button Name="ProfilePreview" Style="{StaticResource ActionButton}" Content="Preview selection"/>
+         </StackPanel>
+        </StackPanel>
+       </Border>
+       <Border Style="{StaticResource GlassCard}">
+        <StackPanel>
+         <TextBlock Name="ProfileCounts" FontSize="17" FontWeight="Bold"/>
+         <TextBlock Text="SELECTED APPS" Foreground="#A5B4FC" FontWeight="Bold" Margin="0,14,0,8"/>
+         <TextBlock Name="SelectedAppsSummary" Foreground="#CBD5EB" TextWrapping="Wrap"/>
+         <TextBlock Text="SELECTED TWEAKS" Foreground="#A5B4FC" FontWeight="Bold" Margin="0,18,0,8"/>
+         <TextBlock Name="SelectedTweaksSummary" Foreground="#CBD5EB" TextWrapping="Wrap"/>
+        </StackPanel>
+       </Border>
+       <Border Background="#242A48" CornerRadius="16" Padding="18" Margin="5,13,5,0">
+        <StackPanel>
+         <TextBlock Text="READY WHEN YOU ARE" Foreground="#B4C2FF" FontWeight="Bold"/>
+         <TextBlock Text="These two steps are deliberately separate and each asks for confirmation. Presets never install apps or modify settings by themselves." Foreground="#BECBE2" TextWrapping="Wrap" Margin="0,9,0,13"/>
+         <WrapPanel>
+          <Button Name="ProfileInstallApps" Style="{StaticResource ActionButton}" Content="Install selected apps"/>
+          <Button Name="ProfileApplyTweaks" Style="{StaticResource ActionButton}" Background="#5B51A8" Content="Apply selected tweaks"/>
+         </WrapPanel>
+        </StackPanel>
+       </Border>
       </StackPanel>
       <StackPanel Name="PageRecovery" Visibility="Collapsed" Margin="0,8,12,12">
        <TextBlock Text="Recover, export &amp; inspect." FontSize="21" FontWeight="Bold" Margin="4,0,0,14"/>
@@ -452,7 +515,7 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       </StackPanel>
      </Grid>
     </ScrollViewer>
-    <Border Grid.Row="2" Background="#131E32" CornerRadius="14" BorderBrush="#2A395A" BorderThickness="1" Padding="13" Margin="0,12,0,0">
+    <Border Grid.Row="3" Background="#131E32" CornerRadius="14" BorderBrush="#2A395A" BorderThickness="1" Padding="13" Margin="0,12,0,0">
      <DockPanel><DockPanel DockPanel.Dock="Top" Margin="2,0,0,8"><TextBlock Text="&#x25CF;  LIVE LOCAL ACTIVITY" FontSize="11" FontWeight="Bold" Foreground="#8FDBDA"/><TextBlock Name="StatusText" Text="Ready" DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="#8EA1C5" FontSize="11"/></DockPanel>
       <TextBox Name="LogText" Background="#0D1525" Foreground="#C0F2E5" BorderThickness="0" FontFamily="Consolas" FontSize="11" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
      </DockPanel>
@@ -598,32 +661,128 @@ function FilterCards {
 FilterCards
 function SelectedApps { @($script:AppBoxes|Where-Object {$_.Check.IsChecked -eq $true}|ForEach-Object {[string]$_.Check.Tag}) }
 function SelectedTweaks { @($script:TweakBoxes|Where-Object {$_.Check.IsChecked -eq $true}|ForEach-Object {[string]$_.Check.Tag}) }
+$script:ChoosingPreset=$false
+$script:CurrentPreset='Custom'
+$script:PresetTiles=@{}
+$script:PresetDescriptions=@{Custom='Create your own mix of apps and Windows preferences. No changes run automatically.'}
+foreach($name in @($script:SetupPresets.Keys)) {$script:PresetDescriptions[$name]=$script:SetupPresets[$name].Desc}
+function UpdateProfileSummary {
+ $apps=@(SelectedApps)
+ $tweaks=@(SelectedTweaks)
+ $name=$script:CurrentPreset
+ (El 'SelectionCounter').Text=($name+'  |  '+$apps.Count+' apps chosen  |  '+$tweaks.Count+' tweaks chosen')
+ (El 'ProfileName').Text=($name+' setup')
+ (El 'ProfileDescription').Text=$script:PresetDescriptions[$name]
+ (El 'ProfileCounts').Text=($apps.Count.ToString()+' applications   /   '+$tweaks.Count.ToString()+' Windows tweaks')
+ (El 'SelectedAppsSummary').Text=if($apps.Count){(@($script:Apps|Where-Object {$apps -contains $_.ID}|ForEach-Object {$_.Name}) -join '   |   ')}else{'No apps selected. Choose some from Applications.'}
+ (El 'SelectedTweaksSummary').Text=if($tweaks.Count){(@($script:Tweaks|Where-Object {$tweaks -contains $_.ID}|ForEach-Object {$_.Name}) -join '   |   ')}else{'No tweaks selected. Choose some from Tweaks & privacy.'}
+ foreach($id in @($script:PresetTiles.Keys)){
+  $tile=$script:PresetTiles[$id]
+  $tile.Background=[Windows.Media.BrushConverter]::new().ConvertFromString($(if($id -eq $name){'#5045A6'}else{'#202F4D'}))
+  $tile.BorderBrush=[Windows.Media.BrushConverter]::new().ConvertFromString($(if($id -eq $name){'#A6A5FF'}else{'#394A6C'}))
+ }
+}
+function SetSetupPreset([string]$name) {
+ if($name -eq 'Custom') {
+  $script:CurrentPreset='Custom'
+  UpdateProfileSummary
+  return
+ }
+ if (!$script:SetupPresets.Contains($name)) {throw ('Unknown setup preset: '+$name)}
+ $appIds=@($script:SetupPresets[$name].Apps)
+ $tweakIds=@($script:Presets[$name])
+ $script:ChoosingPreset=$true
+ try {
+  foreach($a in $script:AppBoxes){$a.Check.IsChecked=($appIds -contains $a.Check.Tag)}
+  foreach($t in $script:TweakBoxes){$t.Check.IsChecked=($tweakIds -contains $t.Check.Tag)}
+ } finally {$script:ChoosingPreset=$false}
+ $script:CurrentPreset=$name
+ UpdateProfileSummary
+ Log ('Selected '+$name+' profile ('+$appIds.Count+' apps, '+$tweakIds.Count+' tweaks). Nothing installed or changed.')
+}
+function NewPresetTile([string]$name,[string]$subtext,[string]$detail) {
+ $button=[Windows.Controls.Button]::new()
+ $button.Name='Tile'+$name
+ $button.Tag=$name
+ $button.Background=[Windows.Media.BrushConverter]::new().ConvertFromString('#202F4D')
+ $button.Foreground=[Windows.Media.Brushes]::White
+ $button.BorderBrush=[Windows.Media.BrushConverter]::new().ConvertFromString('#394A6C')
+ $button.BorderThickness=[Windows.Thickness]::new(1)
+ $button.Padding=[Windows.Thickness]::new(13,7,13,7)
+ $button.Margin=[Windows.Thickness]::new(0,0,9,0)
+ $button.Width=143
+ $button.Height=70
+ $button.Cursor=[Windows.Input.Cursors]::Hand
+ $button.ToolTip=$detail
+ $stack=[Windows.Controls.StackPanel]::new()
+ $main=[Windows.Controls.TextBlock]::new()
+ $main.Text=$name;$main.FontSize=15;$main.FontWeight='Bold'
+ $secondary=[Windows.Controls.TextBlock]::new()
+ $secondary.Text=$subtext;$secondary.Foreground=[Windows.Media.BrushConverter]::new().ConvertFromString('#C2C9ED')
+ $secondary.FontSize=11;$secondary.Margin=[Windows.Thickness]::new(0,5,0,0)
+ [void]$stack.Children.Add($main);[void]$stack.Children.Add($secondary)
+ $button.Content=$stack
+ $button.Add_Click({param($sender,$args) SetSetupPreset ([string]$sender.Tag)})
+ [void](El 'PresetRibbon').Children.Add($button)
+ $script:PresetTiles[$name]=$button
+}
+foreach($name in @($script:SetupPresets.Keys)) {
+ $apps=@($script:SetupPresets[$name].Apps).Count
+ $tweaks=@($script:Presets[$name]).Count
+ NewPresetTile $name ($apps.ToString()+' apps  /  '+$tweaks.ToString()+' tweaks') $script:SetupPresets[$name].Desc
+}
+NewPresetTile 'Custom' 'Your own mix' 'Keep your current choices and customise freely.'
+foreach($item in @($script:AppBoxes)+@($script:TweakBoxes)) {
+ $item.Check.Add_Checked({
+  if(!$script:ChoosingPreset){$script:CurrentPreset='Custom';UpdateProfileSummary}
+ })
+ $item.Check.Add_Unchecked({
+  if(!$script:ChoosingPreset){$script:CurrentPreset='Custom';UpdateProfileSummary}
+ })
+}
+UpdateProfileSummary
+(El 'RibbonApps').Add_Click({Page 'Apps'})
+(El 'RibbonTweaks').Add_Click({Page 'Tweaks'})
+(El 'RibbonReview').Add_Click({Page 'Profiles'})
+(El 'RibbonClear').Add_Click({
+ $script:ChoosingPreset=$true
+ try {
+  foreach($a in $script:AppBoxes){$a.Check.IsChecked=$false}
+  foreach($t in $script:TweakBoxes){$t.Check.IsChecked=$false}
+ } finally {$script:ChoosingPreset=$false}
+ $script:CurrentPreset='Custom'
+ UpdateProfileSummary
+ Log 'Cleared app and tweak selections. No system settings were changed.'
+})
 (El 'SelectAllApps').Add_Click({foreach($a in $script:AppBoxes){if($a.Box.Visibility -eq 'Visible'){$a.Check.IsChecked=$true}}})
 (El 'ClearApps').Add_Click({foreach($a in $script:AppBoxes){$a.Check.IsChecked=$false}})
 (El 'Preview').Add_Click({Apply (SelectedTweaks) $true})
 (El 'Apply').Add_Click({Apply (SelectedTweaks)})
-(El 'Install').Add_Click({
- $wanted=SelectedApps
+function InstallSelectedApps {
+ $wanted=@(SelectedApps)
  $apps=@($script:Apps|Where-Object {$wanted -contains $_.ID})
  if(!$apps.Count){Log 'Select apps first.';return}
  if(!(Get-Command winget.exe -ErrorAction SilentlyContinue)){Log 'WinGet is not installed or not in PATH.';return}
- if([Windows.MessageBox]::Show('Install '+$apps.Count+' selected packages via WinGet?','Marceli Win','YesNo') -ne 'Yes'){return}
+ $message='Install '+$apps.Count+' selected packages via WinGet?'+[Environment]::NewLine+($apps.Name -join ', ')
+ if([Windows.MessageBox]::Show($message,'Marceli Win','YesNo') -ne 'Yes'){return}
  foreach($a in $apps) {
   Log ('Installing '+$a.Name+' ['+$a.ID+']')
   try {$p=Start-Process 'winget.exe' -ArgumentList @('install','--id',$a.ID,'--exact','--accept-source-agreements','--accept-package-agreements') -Wait -PassThru;Log ($a.Name+' exit code '+$p.ExitCode)}
   catch {Log ('Install failed: '+$_.Exception.Message)}
  }
-})
-function SelectedPreset { [string](El 'Preset').SelectedItem.Content }
-function UpdatePresetSummary {
- $ids=$script:Presets[(SelectedPreset)]
- (El 'PresetSummary').Text=(SelectedPreset)+': '+(($script:Tweaks|Where-Object {$ids -contains $_.ID}|ForEach-Object {$_.Name}) -join '   -   ')
 }
-(El 'Preset').Add_SelectionChanged({UpdatePresetSummary})
-UpdatePresetSummary
-(El 'PreviewPreset').Add_Click({Apply $script:Presets[(SelectedPreset)] $true})
-(El 'ApplyPreset').Add_Click({Apply $script:Presets[(SelectedPreset)]})
-(El 'GamingPreset').Add_Click({Apply $script:Presets['Gaming'] $true})
+(El 'Install').Add_Click({InstallSelectedApps})
+(El 'ProfileEditApps').Add_Click({Page 'Apps'})
+(El 'ProfileEditTweaks').Add_Click({Page 'Tweaks'})
+(El 'ProfileInstallApps').Add_Click({InstallSelectedApps})
+(El 'ProfileApplyTweaks').Add_Click({Apply (SelectedTweaks)})
+(El 'ProfilePreview').Add_Click({
+ $apps=@(SelectedApps);$tweaks=@(SelectedTweaks)
+ Log ('PREVIEW '+$script:CurrentPreset+' profile: '+$apps.Count+' apps + '+$tweaks.Count+' tweaks. No changes were made.')
+ if($apps.Count){Log ('APPS: '+(@($script:Apps|Where-Object {$apps -contains $_.ID}|ForEach-Object {$_.Name}) -join ', '))}
+ if($tweaks.Count){Apply $tweaks $true}
+})
+(El 'GamingPreset').Add_Click({SetSetupPreset 'Gaming';Page 'Profiles'})
 function NewActionCard($act,[string]$target) {
  $border=[Windows.Controls.Border]::new()
  $border.Background=[Windows.Media.BrushConverter]::new().ConvertFromString('#1B2942')
@@ -684,7 +843,9 @@ function RefreshSystem {
  if($null -eq $p){return}
  foreach($a in $script:AppBoxes){$a.Check.IsChecked=($p.Apps -contains $a.Check.Tag)}
  foreach($t in $script:TweakBoxes){$t.Check.IsChecked=($p.Tweaks -contains $t.Check.Tag)}
- Page 'Tweaks'
+ $script:CurrentPreset='Custom'
+ UpdateProfileSummary
+ Page 'Profiles'
  Log 'Selections restored. Nothing applied automatically.'
 })
 (El 'ExportReport').Add_Click({ExportReport})
@@ -702,8 +863,17 @@ RefreshSystem
 Log ('Marceli Win preview ready  -  '+$script:Apps.Count+' app entries  -  '+$script:Tweaks.Count+' tweaks  -  '+$script:Actions.Count+' system tools. No changes made.')
 if($SmokeTest) {
  foreach($name in $script:PageNames) {if(!(El ('Page'+$name))){throw ('Missing page '+$name)}}
+ foreach($name in @($script:SetupPresets.Keys)){
+  SetSetupPreset $name
+  if(@(SelectedApps).Count -ne @($script:SetupPresets[$name].Apps).Count){throw ('App preset selection mismatch: '+$name)}
+  if(@(SelectedTweaks).Count -ne @($script:Presets[$name]).Count){throw ('Tweak preset selection mismatch: '+$name)}
+ }
+ SetSetupPreset 'Developer'
+ $script:AppBoxes[0].Check.IsChecked=!$script:AppBoxes[0].Check.IsChecked
+ if($script:CurrentPreset -ne 'Custom'){throw 'Manual selection must switch to Custom profile'}
+ if($script:PresetTiles.Count -ne 8){throw 'Preset bar is missing a preset tile'}
  StopMorph
- Write-Host 'GUI smoke test passed: WPF loaded and navigation pages resolved.'
+ Write-Host 'GUI smoke test passed: WPF navigation, 8 preset bar tiles, app/tweak selection, and customisation.'
  $script:Window.Close()
  return
 }
