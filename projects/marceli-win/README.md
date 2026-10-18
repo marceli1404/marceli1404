@@ -63,7 +63,13 @@ To apply a preset from the CLI, the script asks you to type `APPLY` unless `-Yes
 
 ## Architecture
 
-- `MarceliWin.ps1`: single-file original WPF application and allowlisted actions.
+- `MarceliWin.ps1`: reproducibly generated, standalone PowerShell 5.1/WPF launcher served to users.
+- `src/00-Bootstrap.ps1`: startup validation, local logging and shared state.
+- `src/10-Catalogues.ps1`: curated apps, tweaks, presets and catalogue checks.
+- `src/20-Registry.ps1`: registry inspection, change plans and backup-before-write.
+- `src/30-Operations.ps1`: allowlisted native actions, responsive operation queue, undo and export.
+- `src/40-Interface.ps1`: XAML and WPF presentation logic, event handlers, diagnostics UI.
+- `build.ps1`: deterministic, offline source bundler. Use `powershell.exe -NoProfile -File .\build.ps1 -Check` to verify the launcher matches all five source parts exactly.
 - `site.html`: standalone responsive promotional/docs page with CSS morphing animation and client-side filtering.
 - `worker.js`: Cloudflare edge router. It serves the PowerShell script at `/win`, the website at `/` and `/about`, and points to a commit-pinned GitHub source.
 - `LICENSE`: original MIT licence.
