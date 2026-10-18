@@ -27,7 +27,7 @@ try {
   $compiler='C:\Program Files (x86)\NSIS\makensis.exe'
   if(!(Test-Path $compiler)){throw 'NSIS compiler not installed.'}
   $label=if($Signed){'signed-candidate'}else{'unsigned-preview'}
-  & $compiler '/V3' ("/DBUILD_LABEL="+$label) 'installer\MarceliWin.nsi'
+  & $compiler '/V3' ("/DBUILD_LABEL="+$label) (Join-Path $root 'installer\MarceliWin.nsi')
   if($LASTEXITCODE -ne 0){throw ('NSIS compile failed: '+$LASTEXITCODE)}
  }
  else {
