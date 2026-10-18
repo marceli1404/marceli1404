@@ -1,10 +1,11 @@
-# Marceli Win 0.1 - Copyright (c) 2026 Marceli Pawlinski. MIT.
+# Marceli Win 0.3 - Copyright (c) 2026 Marceli Pawlinski. MIT.
 # Review downloaded scripts before running. No telemetry or secondary code downloads.
 param([ValidateSet('','Safe','Balanced','Gaming','Developer','Privacy','Focus','Accessibility')][string]$Preset='', [switch]$WhatIf, [switch]$Yes, [switch]$SmokeTest)
 $ErrorActionPreference='Stop'
 # Optional CI-only smoke flag exercises the EXACT streamed irm | iex launch path.
 if ($env:MARCELI_WIN_SMOKE_TEST -eq '1') { $SmokeTest = $true }
 if ($env:OS -ne 'Windows_NT') { throw 'Marceli Win requires Windows.' }
+if([Threading.Thread]::CurrentThread.GetApartmentState() -ne [Threading.ApartmentState]::STA -and !$Preset){throw 'Marceli Win WPF requires an STA thread. Use powershell.exe -STA -NoProfile -File .\MarceliWin.ps1.'}
 $script:Data=Join-Path $env:LOCALAPPDATA 'MarceliWin'
 New-Item -Path $script:Data -ItemType Directory -Force | Out-Null
 $script:LogPath=Join-Path $script:Data 'activity.log'
@@ -13,8 +14,18 @@ $script:LogBox=$null
 $script:Window=$null
 function Log([string]$message) {
  $line='['+(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')+'] '+$message
- Add-Content -LiteralPath $script:LogPath -Value $line -Encoding UTF8
- if ($script:LogBox) { $script:LogBox.AppendText($line+[Environment]::NewLine);$script:LogBox.ScrollToEnd() } else { Write-Host $line }
+ try {
+  # Rotate locally at 5 MiB; prevent a very old log from growing without bound.
+  if((Test-Path $script:LogPath) -and (Get-Item -LiteralPath $script:LogPath).Length -gt 5MB){
+   Move-Item -LiteralPath $script:LogPath -Destination ($script:LogPath+'.old') -Force
+  }
+  Add-Content -LiteralPath $script:LogPath -Value $line -Encoding UTF8 -ErrorAction Stop
+ } catch {Write-Warning ('Could not write Marceli Win log: '+$_.Exception.Message)}
+ if($script:LogBox){
+  $script:LogBox.AppendText($line+[Environment]::NewLine)
+  if($script:LogBox.Text.Length -gt 32000){$script:LogBox.Text=$script:LogBox.Text.Substring($script:LogBox.Text.Length-20000)}
+  $script:LogBox.ScrollToEnd()
+ } else {Write-Host $line}
 }
 function IsAdmin {
  $p=[Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -470,10 +481,15 @@ function RestoreLast {
  else {Log 'Some items failed. Keeping the backup for another attempt.'}
 }
 function MakeRestorePoint {
- if(!(IsAdmin)){[Windows.MessageBox]::Show('Open as Administrator to create a restore point.','Elevation needed')|Out-Null;return}
- if([Windows.MessageBox]::Show('Create a Windows system restore point? Requires System Protection enabled.','Marceli Win','YesNo') -ne 'Yes'){return}
- try {Checkpoint-Computer -Description 'Marceli Win manual checkpoint' -RestorePointType 'MODIFY_SETTINGS';Log 'Windows restore point created.'}
- catch {Log ('Restore point unavailable: '+$_.Exception.Message)}
+ if(!(IsAdmin)){
+  [Windows.MessageBox]::Show('Open Windows PowerShell as Administrator to request a restore point.','Elevation needed')|Out-Null
+  return
+ }
+ if([Windows.MessageBox]::Show('Request a Windows system restore point? Requires System Protection enabled. Windows may enforce a creation frequency limit.','Marceli Win','YesNo','Question') -ne 'Yes'){return}
+ # The command is an audited, literal string, not sourced from profiles or text boxes.
+ $command="Checkpoint-Computer -Description 'Marceli Win manual checkpoint' -RestorePointType MODIFY_SETTINGS -ErrorAction Stop"
+ $encoded=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
+ QueueCommand 'Windows restore point' 'powershell.exe' @('-NoProfile','-NonInteractive','-EncodedCommand',$encoded)
 }
 if($Preset) { Apply $script:Presets[$Preset];return }
 Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
@@ -693,6 +709,14 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
 </Window>
 '@
 $script:Window=[Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::new($ui))
+$script:Window.Dispatcher.Add_UnhandledException({
+ param($sender,$eventArgs)
+ $msg=if($eventArgs.Exception){$eventArgs.Exception.Message}else{'Unknown UI exception'}
+ try {Log ('UNEXPECTED UI ERROR: '+$msg)}catch{}
+ [Windows.MessageBox]::Show('Marceli Win could not complete a UI action.'+[Environment]::NewLine+$msg+
+  [Environment]::NewLine+'Review the local activity log for details.','Marceli Win - Error')|Out-Null
+ $eventArgs.Handled=$true
+})
 function El([string]$id) { $script:Window.FindName($id) }
 $script:QueueTimer=[Windows.Threading.DispatcherTimer]::new()
 $script:QueueTimer.Interval=[TimeSpan]::FromMilliseconds(300)
@@ -702,6 +726,22 @@ $script:QueueTimer.Add_Tick({PollCommandQueue})
   $script:CancelAfterCurrent=$true
   Log 'Stop requested: pending commands will be skipped after the active installer exits.'
   if(!$script:ActiveCommand){PollCommandQueue}
+ }
+})
+$script:Window.Add_Closing({
+ param($sender,$eventArgs)
+ if($script:ActiveCommand -or $script:CommandQueue.Count -gt 0){
+  $result=[Windows.MessageBox]::Show(
+   'An operation is still running or queued. Closing the window will abandon pending tasks but will NOT terminate an active installer. Close anyway?',
+   'Marceli Win - Active tasks','YesNo','Warning')
+  if($result -ne 'Yes'){$eventArgs.Cancel=$true;return}
+  $script:CommandQueue.Clear()
+  if($script:QueueTimer.IsEnabled){$script:QueueTimer.Stop()}
+  if($script:ActiveCommand){
+   Log ('Detached from running operation: '+$script:ActiveCommand.Label+'. The external process can continue.')
+   $script:ActiveCommand.Process.Dispose()
+   $script:ActiveCommand=$null
+  }
  }
 })
 $script:LogBox=El 'LogText'
@@ -1044,6 +1084,15 @@ $script:Window.Add_PreviewKeyDown({
 RefreshSystem
 Log ('Marceli Win preview ready  -  '+$script:Apps.Count+' app entries  -  '+$script:Tweaks.Count+' tweaks  -  '+$script:Actions.Count+' system tools. No changes made.')
 if($SmokeTest) {
+ # The fake command has zero external side effects. Verify that the dispatcher
+ # receives a process handle immediately and that the queue eventually settles.
+ QueueCommand 'CI process queue smoke' 'cmd.exe' @('/c','exit','0')
+ if($null -eq $script:ActiveCommand){throw 'Process queue did not start.'}
+ for($i=0;$i -lt 80 -and $script:ActiveCommand;$i++){
+  Start-Sleep -Milliseconds 60
+  PollCommandQueue
+ }
+ if($script:ActiveCommand -or $script:CommandQueue.Count -gt 0){throw 'Process queue did not complete.'}
  foreach($name in $script:PageNames) {if(!(El ('Page'+$name))){throw ('Missing page '+$name)}}
  foreach($name in @($script:SetupPresets.Keys)){
   SetSetupPreset $name
