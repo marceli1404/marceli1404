@@ -2,6 +2,8 @@
 ; Compile from projects/marceli-win with makensis.exe /V3 installer\MarceliWin.nsi
 Unicode true
 !include "MUI2.nsh"
+; All relative build paths now resolve against the project root, not installer/.
+!cd "${__FILEDIR__}\\.."
 
 !ifndef APP_VERSION
   !define APP_VERSION "0.3.0"
@@ -39,8 +41,8 @@ VIAddVersionKey "LegalCopyright" "Copyright 2026 Marceli Pawlinski. MIT."
 Section "Marceli Win (required)" SecMain
   SetShellVarContext current
   SetOutPath "$INSTDIR"
-  File "MarceliWin.ps1"
-  File "launcher.cmd"
+  File "dist\\stage\\MarceliWin.ps1"
+  File "dist\\stage\\launcher.cmd"
   File "LICENSE"
   File "installer\INSTALLATION.txt"
 
