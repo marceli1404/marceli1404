@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090d1a">
+<meta name="description" content="Marceli Win is an open-source Windows toolkit with curated app installs, reversible tweaks, gaming utilities, repair tools and animated modern design.">
+<title>Marceli Win — Make Windows yours</title>
+<style>
+:root{color-scheme:dark;--bg:#080c17;--surface:#141b2e;--card:#18243a;--stroke:#293650;--text:#eef2ff;--muted:#99a9c4;--accent:#a7b3ff;--indigo:#7865f6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:300px;background:var(--bg);color:var(--text);font:15px/1.65 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#8172ea60}button,input{font:inherit}a{color:inherit;text-decoration:none}
+.progress{position:fixed;top:0;left:0;width:0;height:2px;z-index:100;background:linear-gradient(90deg,#a68cfb,#59e0e4);transition:width .1s linear}
+.ambient{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.shape{position:absolute;filter:blur(58px);opacity:.42;will-change:transform,border-radius;animation:morph 13s ease-in-out infinite alternate,float 17s ease-in-out infinite alternate}
+.shape.a{width:510px;height:490px;top:80px;left:51%;background:linear-gradient(120deg,#7450f1,#5645d9,#16adba);animation-delay:0s,-3s}
+.shape.b{width:390px;height:400px;top:430px;left:-230px;background:linear-gradient(130deg,#174acd,#6c4fee);animation-delay:-6s,-9s;opacity:.24}
+.shape.c{width:260px;height:260px;top:800px;right:-120px;background:#12bbba;animation-delay:-12s,-5s;opacity:.24}
+@keyframes morph{0%{border-radius:42% 58% 65% 35%/56% 42% 58% 44%}33%{border-radius:69% 31% 38% 62%/29% 63% 37% 71%}66%{border-radius:36% 64% 71% 29%/66% 29% 71% 34%}100%{border-radius:64% 36% 45% 55%/47% 73% 27% 53%}}
+@keyframes float{0%{transform:translate3d(0,0,0) rotate(-14deg)}50%{transform:translate3d(-8%,9%,0) rotate(12deg)}100%{transform:translate3d(12%,-8%,0) rotate(-8deg)}}
+@keyframes enter{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #9a91ef22}50%{box-shadow:0 0 0 10px #9a91ef00}}
+.container{max-width:1220px;margin:auto;padding:0 28px}
+header{position:sticky;top:0;z-index:20;background:#080c17cf;backdrop-filter:blur(24px);border-bottom:1px solid #ffffff0d}
+.nav{display:flex;align-items:center;gap:22px;justify-content:space-between;height:80px}.logo{display:flex;align-items:center;gap:12px;font-size:16px;font-weight:800;letter-spacing:-.05em}.logo-mark{display:grid;place-items:center;width:43px;height:43px;background:linear-gradient(135deg,#3d3e8f,#6970bb);border:1px solid #8c97d180;border-radius:14px;color:white;font-size:24px;box-shadow:0 8px 45px #585bd054}.logo small{font-size:9px;letter-spacing:.22em;display:block;font-weight:600;color:var(--accent)}
+.nav-links{display:flex;gap:29px;align-items:center;color:#acb8d2;font-size:13px}.nav-links a:hover{color:#fff}
+.controls{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid #45557b;background:#202e4d;color:#eef3ff;border-radius:12px;padding:11px 16px;font-weight:650;font-size:13px;cursor:pointer;transition:transform .22s ease,border-color .25s ease,background .25s ease,box-shadow .25s ease}
+.btn:hover{transform:translateY(-2px);background:#2d3e65;border-color:#697bb0;box-shadow:0 10px 32px #0004}
+.btn.primary{background:linear-gradient(115deg,#8981ff,#7364e6);color:#fff;border-color:#9697fa;box-shadow:0 12px 42px #655ddd44}
+.btn.primary:hover{box-shadow:0 13px 42px #7970ff85}
+.btn.icon{width:40px;height:40px;padding:0;border-radius:12px}
+.hero{position:relative;isolation:isolate;min-height:725px;overflow:hidden;border-bottom:1px solid #ffffff0a}
+.hero-main{padding-top:108px;position:relative;z-index:2;max-width:800px}
+.overline{display:inline-flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid #7781c94c;background:#1b255475;border-radius:50px;color:#c4cfff;font-weight:750;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.dot{width:7px;height:7px;background:#78d9db;border-radius:50%;box-shadow:0 0 15px #78d9db}
+h1{font-size:clamp(59px,8.4vw,116px);line-height:1.02;letter-spacing:-.075em;margin:29px 0 25px;font-weight:830}
+h1 .gradient{background:linear-gradient(105deg,#c3c1ff 5%,#918eff 48%,#71d5db 99%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero p{max-width:630px;font-size:19px;color:#afbed7;margin:0 0 30px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}.hero .btn{padding:14px 19px}
+.pills{display:flex;gap:16px;flex-wrap:wrap;margin-top:34px;color:#96a9cc;font-size:12px}.pills span{display:inline-flex;gap:8px;align-items:center}
+.preview{position:relative;z-index:2;margin-top:75px;border:1px solid #8493d263;background:linear-gradient(125deg,#1a2743cf,#0d1426f2);border-radius:21px;padding:13px;box-shadow:0 25px 85px #0008;backdrop-filter:blur(18px);transform:perspective(1500px) rotateX(2deg);animation:enter 1.1s both}
+.preview-top{padding:11px 13px 18px;display:flex;justify-content:space-between;color:#899dbf;font-size:11px}
+.window-dots{display:flex;gap:7px}.window-dots i{display:block;width:9px;height:9px;background:#657895;border-radius:100%}.window-dots i:first-child{background:#a887b3}.window-dots i:nth-child(2){background:#c5ad7a}
+.mock{display:grid;grid-template-columns:190px 1fr;min-height:325px;gap:20px}.mock-sidebar{background:#111b30;border-radius:13px;padding:20px 15px}.mock-sidebar strong{font-size:14px;color:#c6d1ff}.mock-link{font-size:12px;padding:11px 12px;color:#92a4c5;border-radius:8px}.mock-link.active{background:#353f85;color:#e5e5ff}
+.mock-main{padding:14px 15px}.mock-main .eyebrow{color:#94adff;font-size:10px;letter-spacing:.18em;font-weight:800}.mock-main h3{font-size:26px;letter-spacing:-.05em;line-height:1.2;margin:10px 0 13px}.mock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mock-card{background:#1c2b47;border-radius:12px;padding:20px 14px;border:1px solid #354565;min-height:100px}.mock-card b{font-size:22px;display:block;color:#d9defd}.mock-card small{font-size:11px;color:#94a6c8}.mock-wave{height:50px;margin-top:16px;border-radius:12px;background:linear-gradient(100deg,#211d5f 0%,#424e9d 35%,#247b97 63%,#2b315e 100%);opacity:.75;clip-path:polygon(0% 60%,12% 30%,24% 45%,36% 18%,50% 43%,60% 20%,74% 44%,87% 22%,100% 60%,100% 100%,0 100%);animation:breathe 5s ease-in-out infinite alternate}
+@keyframes breathe{to{clip-path:polygon(0 25%,12% 50%,24% 21%,36% 59%,50% 24%,60% 55%,74% 16%,87% 48%,100% 26%,100% 100%,0 100%)}}
+section{padding:95px 0}.section-kicker{font-size:11px;color:#a3adf9;letter-spacing:.22em;font-weight:800}.section-title{font-size:clamp(35px,4vw,57px);line-height:1.13;letter-spacing:-.055em;margin:14px 0 18px}.section-intro{color:#aab9d3;font-size:16px;max-width:650px;margin-bottom:34px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#31405a;border:1px solid #31405a;border-radius:17px;overflow:hidden;margin-top:45px}
+.stat{background:#141d31;padding:26px}.stat strong{display:block;font-size:36px;line-height:1.1;letter-spacing:-.05em}.stat span{display:block;color:#9caac4;font-size:12px;margin-top:7px}
+.feature-controls{display:flex;flex-wrap:wrap;gap:10px;margin:25px 0}.chip{border-radius:99px;border:1px solid #394767;background:#17243a;color:#9eafca;padding:9px 16px;cursor:pointer;font-size:12px;transition:.25s}.chip:hover,.chip.active{background:#3d3a8b;color:#fff;border-color:#7772d8}
+.search{margin-left:auto;background:#131d30;border:1px solid #394767;color:#dce5fa;border-radius:12px;padding:10px 15px;min-width:215px;max-width:100%;outline:none}
+.search:focus{border-color:#8e92d6}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature{padding:25px;border-radius:17px;border:1px solid #2a3b57;background:linear-gradient(155deg,#1a2940,#121b2c);transition:transform .28s,border-color .28s,background .28s;min-height:177px}
+.feature:hover{transform:translateY(-6px);border-color:#677cc0;background:linear-gradient(155deg,#243558,#172039)}
+.feature .sym{font-size:23px;display:block;margin-bottom:14px}.feature h3{font-size:16px;margin:0 0 8px}.feature p{font-size:12px;color:#a2b1cc;line-height:1.65;margin:0}
+.feature[hidden]{display:none!important}
+.feature .kind{display:inline-block;margin-top:13px;color:#9faef1;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.flow-card{border:1px solid #344363;border-radius:22px;padding:29px;background:#19233a}.flow-card h3{font-size:25px;letter-spacing:-.03em;margin:4px 0 14px}
+.flow-card p{color:#abbad4}.flow-card code{font:12px/1.7 ui-monospace,Consolas,monospace;color:#c4cbff}
+.command{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid #3a4970;border-radius:13px;background:#0c1628;padding:14px;overflow:auto}.command code{white-space:nowrap}.command button{border-radius:8px;border:1px solid #3a5182;color:#dce5ff;background:#222e53;cursor:pointer;padding:7px 12px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:33px}.step{padding:26px;border-left:1px solid #56629d}.step b{color:#a8b0f7;font-size:14px}.step h3{font-size:20px;margin:14px 0 7px}.step p{color:#9eafcb;font-size:13px}
+.cta{border-radius:27px;border:1px solid #625eb8;background:radial-gradient(ellipse at top right,#5951af65,transparent 55%),linear-gradient(135deg,#232854,#16213a);padding:53px;position:relative;overflow:hidden}.cta::after{content:"";position:absolute;right:-30px;top:-65px;width:280px;height:260px;border-radius:38% 62% 65% 35%;border:35px solid #847cf32a;animation:morph 9s ease-in-out infinite alternate;pointer-events:none}
+.cta h2{font-size:clamp(34px,4vw,54px);letter-spacing:-.055em;line-height:1.1;max-width:700px;margin:10px 0 18px}.cta p{max-width:650px;color:#b2c0e2;margin-bottom:23px}
+footer{border-top:1px solid #293b5a;padding:33px 0 45px;color:#91a2bc;font-size:12px}.footerline{display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+@media(max-width:960px){.mock-grid{grid-template-columns:repeat(3,1fr)}.features{grid-template-columns:repeat(2,1fr)}.nav-links{display:none}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.container{padding:0 18px}.nav{height:66px}.controls .btn.primary{display:none}.hero{min-height:620px}.hero-main{padding-top:76px}h1{font-size:56px}.hero p{font-size:16px}.mock{grid-template-columns:1fr}.mock-sidebar{display:none}.mock-main{padding:9px}.mock-card{padding:13px 10px}.mock-card b{font-size:18px}.mock-wave{height:28px}.features,.flow,.steps{grid-template-columns:1fr}.feature{min-height:unset}.stats{grid-template-columns:repeat(2,1fr)}.stat{padding:17px}.stat strong{font-size:27px}.feature-controls .search{margin-left:0;width:100%}.cta{padding:28px}.hero-actions .btn{width:100%}.preview{margin-top:55px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+body.no-motion .reveal{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header><nav class="nav container" aria-label="Main navigation">
+ <a href="/" class="logo"><span class="logo-mark" aria-hidden="true">◈</span><span>MARCELI <small>WIN / TOOLKIT</small></span></a>
+ <div class="nav-links"><a href="#features">Features</a><a href="#experience">Experience</a><a href="#launch">Launch</a><a href="https://github.com/marceli1404/marceli1404/pull/1">Source ↗</a></div>
+ <div class="controls"><button class="btn icon" id="motion" type="button" aria-label="Turn off motion" title="Toggle motion">◌</button><a class="btn primary" href="#launch">Explore the toolkit ↗</a></div>
+</nav></header>
+<main>
+<section class="hero" style="padding:0">
+<div class="ambient" aria-hidden="true"><div class="shape a"></div><div class="shape b"></div><div class="shape c"></div></div>
+<div class="container">
+ <div class="hero-main">
+  <div class="overline"><span class="dot"></span> OPEN SOURCE • WINDOWS 10 / 11 • PREVIEW 0.3</div>
+  <h1>Windows.<br><span class="gradient">Reimagined.</span></h1>
+  <p>An expressive control centre for the Windows experience. Install apps, fine-tune your setup, explore diagnostics, and stay in control of every change.</p>
+  <div class="hero-actions"><a class="btn primary" href="#launch">Get Marceli Win <span>↗</span></a><a class="btn" href="#features">Discover what's inside →</a></div>
+  <div class="pills"><span>✦ Reversible preferences</span><span>⌁ Motion-aware design</span><span>◈ No telemetry</span><span>◇ Windows-native utilities</span></div>
+ </div>
+ <div class="preview" aria-label="Illustration of Marceli Win desktop interface">
+ <div class="preview-top"><div class="window-dots"><i></i><i></i><i></i></div><span>MARCELI WIN // CONTROL CENTRE</span><span>◌  ·  ◇  ·  ×</span></div>
+ <div class="mock"><div class="mock-sidebar"><strong>◈ &nbsp; MARCELI WIN</strong><div class="mock-link active" style="margin-top:28px">⌂ &nbsp; Overview</div><div class="mock-link">▦ &nbsp; Applications</div><div class="mock-link">✦ &nbsp; Tweaks &amp; privacy</div><div class="mock-link">◆ &nbsp; Gaming lab</div><div class="mock-link">⌁ &nbsp; Network lab</div><div class="mock-link">⚒ &nbsp; Repair centre</div><div class="mock-link">◈ &nbsp; Smart profiles</div></div>
+ <div class="mock-main"><div class="eyebrow">YOUR SYSTEM, UNLOCKED</div><h3>Make your PC feel yours.</h3><div class="mock-grid"><div class="mock-card"><b>52</b><small>App entries</small></div><div class="mock-card"><b>29</b><small>Reversible tweaks</small></div><div class="mock-card"><b>52</b><small>Windows actions</small></div></div><div class="mock-wave"></div></div></div></div>
+</div></section>
+<section class="container reveal" id="features">
+ <div class="section-kicker">EXPLORE THE TOOLKIT</div><h2 class="section-title">Serious functionality.<br>Effortless control.</h2>
+ <p class="section-intro">Choose the tasks you want. Marceli Win keeps ordinary settings accessible and makes potentially disruptive changes visible before they happen.</p>
+ <div class="stats"><div class="stat"><strong>52</strong><span>Curated application entries</span></div><div class="stat"><strong>29</strong><span>Windows tweak entries</span></div><div class="stat"><strong>52</strong><span>Windows tool actions</span></div><div class="stat"><strong>7</strong><span>Guided profiles</span></div></div>
+ <div class="feature-controls" role="group" aria-label="Filter features">
+  <button class="chip active" data-filter="all" aria-pressed="true">All features</button><button class="chip" data-filter="setup" aria-pressed="false">Setup</button><button class="chip" data-filter="system" aria-pressed="false">System</button><button class="chip" data-filter="gaming" aria-pressed="false">Gaming</button><button class="chip" data-filter="safety" aria-pressed="false">Safety</button>
+  <input class="search" id="feature-search" type="search" placeholder="Search capabilities…" aria-label="Search features">
+ </div>
+ <div class="features" id="feature-list">
+  <article class="feature" data-tags="setup apps packages winget"><span class="sym">▦</span><h3>Curated app installation</h3><p>Choose browsers, creative tools, editors, launchers, utility apps and productivity software.</p><span class="kind">Setup</span></article>
+  <article class="feature" data-tags="setup apps winget upgrades"><span class="sym">↻</span><h3>App upgrades</h3><p>Run Windows Package Manager updates with visible confirmation.</p><span class="kind">Setup</span></article>
+  <article class="feature" data-tags="setup developer code"><span class="sym">⌘</span><h3>Developer workspace</h3><p>Git, PowerShell, editors, container tools and source-code utilities.</p><span class="kind">Setup</span></article>
+  <article class="feature" data-tags="setup preset profiles"><span class="sym">◈</span><h3>Seven smart profiles</h3><p>Safe, Balanced, Gaming, Developer, Privacy, Focus and Accessibility.</p><span class="kind">Setup</span></article>
+  <article class="feature" data-tags="system explorer tweaks"><span class="sym">▤</span><h3>Explorer preferences</h3><p>File extensions, hidden items, sidebar behaviour and compact file lists.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="system appearance themes"><span class="sym">✦</span><h3>Theme and taskbar</h3><p>Dark-mode settings, transparency, taskbar alignment and visual preferences.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="system privacy advertising"><span class="sym">◇</span><h3>Per-user privacy</h3><p>Reduce suggested content, ad ID usage and search highlights where supported.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="system metrics hardware"><span class="sym">▥</span><h3>Hardware overview</h3><p>Windows build, CPU, graphics, memory, storage and uptime in one place.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="gaming game mode"><span class="sym">◆</span><h3>Gaming profile</h3><p>Game Mode and background capture preferences without driver or anti-cheat hacks.</p><span class="kind">Gaming</span></article>
+  <article class="feature" data-tags="gaming performance hdr gpu"><span class="sym">◉</span><h3>Graphics and HDR</h3><p>Open native display, graphics and DirectX diagnostics.</p><span class="kind">Gaming</span></article>
+  <article class="feature" data-tags="gaming audio controller"><span class="sym">♫</span><h3>Audio and controllers</h3><p>Access Windows sound, mouse, Bluetooth and Game Bar settings.</p><span class="kind">Gaming</span></article>
+  <article class="feature" data-tags="system network dns ip"><span class="sym">⌁</span><h3>Network lab</h3><p>IP and DNS inspection, routing tables, ping, trace and active connections.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="system repair dism sfc"><span class="sym">⚒</span><h3>Repair centre</h3><p>DISM component checks, SFC, disk scans and Reliability Monitor.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="system tools services storage"><span class="sym">▣</span><h3>Native system tools</h3><p>Task Manager, Resource Monitor, Device Manager, services, startup and storage.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="safety reversible backup registry"><span class="sym">↺</span><h3>Last-batch tweak undo</h3><p>Save original registry values before applying a supported preference change.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety restore point"><span class="sym">✚</span><h3>Windows restore points</h3><p>Request a restore point through Windows System Protection when available.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety profile import export json"><span class="sym">⇄</span><h3>Import and export profiles</h3><p>Share app and tweak selections as JSON without automatically applying them.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety logs privacy report"><span class="sym">▤</span><h3>Local activity log</h3><p>Keep a reviewable record of requested actions with no analytics service.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety motion animation access"><span class="sym">◌</span><h3>Motion controls</h3><p>Fluid shapes and polished transitions that respect Windows animation settings, with a motion-off option.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety system responsiveness background operations queue"><span class="sym">↻</span><h3>Responsive operations queue</h3><p>Installers and repair tools run separately from the interface, with completion status and safe stop-after-current.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="safety registry backup rollback"><span class="sym">⇄</span><h3>Change-plan previews</h3><p>See current vs requested values, skip unchanged preferences and keep a validated local rollback.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="system accessibility motion"><span class="sym">◌</span><h3>Windows motion preferences</h3><p>Desktop animation follows Windows accessibility settings and respects high-contrast mode.</p><span class="kind">System</span></article>
+  <article class="feature" data-tags="safety report diagnostics export"><span class="sym">◇</span><h3>Exportable diagnostics</h3><p>Save a machine overview locally for troubleshooting without uploading anything.</p><span class="kind">Safety</span></article>
+  <article class="feature" data-tags="setup search keyboard"><span class="sym">⌕</span><h3>Instant search</h3><p>Search applications and tweak descriptions using the keyboard or search box.</p><span class="kind">Setup</span></article>
+ </div>
+ <p id="count" style="color:#8698b8;margin-top:18px;font-size:12px" aria-live="polite"></p>
+</section>
+<section id="experience" style="background:linear-gradient(180deg,#0d1424,#11172a)">
+ <div class="container reveal"><div class="section-kicker">BUILT DIFFERENT</div><h2 class="section-title">Beautiful to explore.<br>Clear when it matters.</h2><p class="section-intro">A dynamic, morphing interface should make the product memorable, never hide what a system action will do.</p>
+ <div class="flow"><div class="flow-card"><div style="color:#abc3ff">01 / MOTION</div><h3>Fluid, alive and optional.</h3><p>Ambient gradient shapes shift naturally. Desktop page transitions soften navigation. Turn motion off any time, and the website respects reduced-motion preferences.</p></div>
+ <div class="flow-card"><div style="color:#abc3ff">02 / CONTROL</div><h3>Preview. Confirm. Restore.</h3><p>Registry tweaks keep a local record of prior values. Presets are fully previewable. Diagnostic actions always show the command before they execute.</p></div></div>
+ </div>
+</section>
+<section class="container reveal" id="launch">
+ <div class="section-kicker">RUN IT YOUR WAY</div><h2 class="section-title">Start with the source.</h2>
+ <p class="section-intro">This is a developer preview, not a signed Windows release. Download and inspect the script before running it; a reviewed version can be executed locally.</p>
+ <div class="flow">
+  <div class="flow-card"><h3>Recommended: inspect first</h3><div class="command"><code>irm https://win.marceli.dev/win -OutFile .\MarceliWin.ps1</code><button type="button" data-copy="irm https://win.marceli.dev/win -OutFile .\MarceliWin.ps1">Copy</button></div><p>Open the file with Notepad, then run it with Windows PowerShell 5.1. Changes only happen after you select and confirm them.</p></div>
+  <div class="flow-card"><h3>Convenience launcher</h3><div class="command"><code>irm https://win.marceli.dev/win | iex</code><button type="button" data-copy="irm https://win.marceli.dev/win | iex">Copy</button></div><p>Remote execution is convenient but carries risk. Only use it after reviewing the script and trusting the endpoint.</p></div>
+ </div>
+ <div class="steps"><div class="step"><b>01 / AUDIT</b><h3>Review the code</h3><p>Inspect the MIT-licensed source and the actions it allows.</p></div><div class="step"><b>02 / SELECT</b><h3>Choose your changes</h3><p>Pick apps, tweaks, built-in tools or a profile.</p></div><div class="step"><b>03 / CONFIRM</b><h3>Apply consciously</h3><p>Review the changes and use recovery options when needed.</p></div></div>
+</section>
+<section class="container reveal" style="padding-top:25px"><div class="cta"><div class="section-kicker">MARCELI WIN / PREVIEW</div><h2>Control your Windows experience.</h2><p>Original open-source implementation inspired by established Windows utilities. Early preview — still needs real-machine usability and security testing before a stable release.</p><a class="btn primary" href="https://github.com/marceli1404/marceli1404/pull/1">Explore the source code ↗</a></div></section>
+</main>
+<footer><div class="container footerline"><span>◈ MARCELI WIN © 2026 • Independent project • MIT</span><span>Not affiliated with or endorsed by Chris Titus Tech. No telemetry.</span><span><a href="https://github.com/marceli1404/marceli1404/pull/1">GitHub source ↗</a></span></div></footer>
+<script>
+(function(){
+ var off=false;
+ var motion=document.getElementById('motion');
+ motion.addEventListener('click',function(){off=!off;document.body.classList.toggle('no-motion',off);motion.setAttribute('aria-label',off?'Turn on motion':'Turn off motion');motion.textContent=off?'▶':'◌';});
+ var filters=[].slice.call(document.querySelectorAll('[data-filter]'));
+ var search=document.getElementById('feature-search');
+ var cards=[].slice.call(document.querySelectorAll('.feature[data-tags]'));
+ var active='all';
+ function update(){
+  var query=search.value.trim().toLowerCase(),shown=0;
+  cards.forEach(function(card){
+   var tags=card.getAttribute('data-tags');
+   var passCat=active==='all'||tags.split(' ').indexOf(active)!==-1;
+   var passText=!query||(card.innerText+' '+tags).toLowerCase().indexOf(query)!==-1;
+   card.hidden=!(passCat&&passText);if(!card.hidden)shown++;
+  });
+  document.getElementById('count').textContent=shown+' illustrated capabilities. Full catalogues are available in the desktop utility.';
+ }
+ filters.forEach(function(btn){btn.addEventListener('click',function(){active=btn.getAttribute('data-filter');filters.forEach(function(b){b.classList.toggle('active',b===btn);b.setAttribute('aria-pressed',String(b===btn));});update();});});
+ search.addEventListener('input',update);update();
+ document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+   var raw=btn.getAttribute('data-copy');
+   if(!navigator.clipboard){btn.textContent='Select text';return}
+   navigator.clipboard.writeText(raw).then(function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy'},1500);}).catch(function(){btn.textContent='Select text';});
+  });
+ });
+ if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(items){items.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+ }else{document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('visible')})}
+ var prog=document.getElementById('progress');
+ window.addEventListener('scroll',function(){var denom=document.documentElement.scrollHeight-innerHeight;prog.style.width=(denom>0?window.scrollY/denom*100:0)+'%'},{passive:true});
+})();
+</script>
+</body>
+</html>

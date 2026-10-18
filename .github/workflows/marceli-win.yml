@@ -1,0 +1,114 @@
+name: Marceli Win Windows checks
+on:
+  pull_request:
+    paths:
+      - "projects/marceli-win/**"
+      - ".github/workflows/marceli-win.yml"
+  workflow_dispatch:
+jobs:
+  windows-parse-and-dry-run:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify reproducible standalone PowerShell build
+        shell: powershell
+        run: |
+          & '.\projects\marceli-win\build.ps1' -Check
+      - name: Parse PowerShell source
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile('projects/marceli-win/MarceliWin.ps1',[ref]$tokens,[ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            exit 1
+          }
+      - name: PowerShell security static analysis
+        shell: pwsh
+        run: |
+          if (!(Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Repository PSGallery -Force -ErrorAction Stop
+          }
+          Import-Module PSScriptAnalyzer -ErrorAction Stop
+          $path = 'projects/marceli-win/MarceliWin.ps1'
+          $rules = @('PSAvoidUsingInvokeExpression','PSAvoidUsingPlainTextForPassword','PSAvoidUsingConvertToSecureStringWithPlainText','PSAvoidUsingUsernameAndPasswordParams')
+          $problems = @(Invoke-ScriptAnalyzer -Path $path -IncludeRule $rules -ErrorAction Stop)
+          if ($problems.Count) {
+            $problems | Format-Table RuleName, Severity, Line, Message -AutoSize | Out-String | Write-Host
+            throw "PowerShell security lint found $($problems.Count) issue(s)."
+          }
+          Write-Host 'PowerShell security static analysis: passed'
+      - name: Preview safe preset without changing Windows
+        shell: powershell
+        run: |
+          & '.\projects\marceli-win\MarceliWin.ps1' -Preset Safe -WhatIf
+      - name: Smoke test morphing WPF interface and navigation
+        shell: powershell
+        run: |
+          & '.\projects\marceli-win\MarceliWin.ps1' -SmokeTest
+      - name: Reproduce remote irm pipe iex startup safely
+        shell: powershell
+        env:
+          MARCELI_WIN_SMOKE_TEST: "1"
+        run: |
+          $uri = 'https://raw.githubusercontent.com/marceli1404/marceli1404/' + $env:GITHUB_SHA + '/projects/marceli-win/MarceliWin.ps1'
+          $download = Invoke-RestMethod -Uri $uri -TimeoutSec 40
+          if ([int][char]$download[0] -eq 65279) { throw 'Leading Unicode BOM will break irm | iex' }
+          if ($download -notmatch 'CreateFromGeometry') { throw 'Missing morph geometry fix' }
+          $download | Invoke-Expression
+          Write-Host 'Live-style irm | iex completed WPF startup without system changes'
+      - name: Exercise the published irm pipe iex command without making changes
+        shell: powershell
+        env:
+          MARCELI_WIN_SMOKE_TEST: "1"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          irm https://win.marceli.dev/win | iex
+          Write-Host 'Published Marceli Win launcher passed the PowerShell 5.1 WPF smoke test.'
+      - name: Validate website JavaScript and Worker syntax
+        shell: pwsh
+        run: |
+          $html = Get-Content 'projects/marceli-win/site.html' -Raw
+          $script = [regex]::Match($html, '(?s)<script>(.*?)</script>')
+          if (!$script.Success) { throw 'Site JavaScript not found' }
+          $file = Join-Path $env:RUNNER_TEMP 'marceli-site.mjs'
+          [IO.File]::WriteAllText($file, $script.Groups[1].Value, [Text.Encoding]::UTF8)
+          node --check $file
+          node --check 'projects/marceli-win/worker.js'
+          if (!$html.Contains('prefers-reduced-motion')) { throw 'Site must support reduced motion' }
+      - name: Smoke test live pinned launcher and animated website
+        shell: pwsh
+        run: |
+          $worker = Get-Content 'projects/marceli-win/worker.js' -Raw
+          $match = [regex]::Match($worker, 'const SOURCE_COMMIT = "([0-9a-f]{40})"')
+          if (!$match.Success) { throw 'Worker must use a pinned source commit' }
+          $pin = $match.Groups[1].Value
+          $origin = "https://raw.githubusercontent.com/marceli1404/marceli1404/$pin/projects/marceli-win"
+          $checks = @(
+            @{Path='MarceliWin.ps1';Url='https://win.marceli.dev/win'},
+            @{Path='site.html';Url='https://win.marceli.dev/about'}
+          )
+          foreach ($check in $checks) {
+            $sourceFile = Join-Path $env:RUNNER_TEMP ('source-' + $check.Path)
+            $liveFile = Join-Path $env:RUNNER_TEMP ('live-' + $check.Path)
+            Invoke-WebRequest "$origin/$($check.Path)" -OutFile $sourceFile -TimeoutSec 30 -ErrorAction Stop
+            Invoke-WebRequest $check.Url -OutFile $liveFile -TimeoutSec 30 -ErrorAction Stop
+            $expected = (Get-FileHash $sourceFile -Algorithm SHA256).Hash
+            $actual = (Get-FileHash $liveFile -Algorithm SHA256).Hash
+            if ($expected -ne $actual) {
+              $srcText = Get-Content $sourceFile -Raw
+              $liveText = Get-Content $liveFile -Raw
+              Write-Host "Pinned bytes: $((Get-Item $sourceFile).Length); Live bytes: $((Get-Item $liveFile).Length)"
+              Write-Host "Pinned prefix: $($srcText.Substring(0,[Math]::Min(180,$srcText.Length)))"
+              Write-Host "Live prefix: $($liveText.Substring(0,[Math]::Min(180,$liveText.Length)))"
+              Write-Host "Website feature-list present: $($liveText.Contains('id=' + [char]34 + 'feature-list'))"
+              $first = 0
+              while($first -lt [Math]::Min($srcText.Length,$liveText.Length) -and $srcText[$first] -eq $liveText[$first]){$first++}
+              Write-Host "First mismatched char: $first"
+              Write-Host "Live around mismatch: $($liveText.Substring([Math]::Max(0,$first-60),[Math]::Min(700,$liveText.Length-[Math]::Max(0,$first-60))))"
+              Write-Host "Live ending: $($liveText.Substring([Math]::Max(0,$liveText.Length-700)))"
+              throw "$($check.Url) does not match pinned source ($pin)"
+            }
+            Write-Host "$($check.Url) exactly matches pinned source"
+          }
