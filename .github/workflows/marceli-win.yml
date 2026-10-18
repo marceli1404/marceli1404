@@ -39,6 +39,14 @@ jobs:
           if ($download -notmatch 'CreateFromGeometry') { throw 'Missing morph geometry fix' }
           $download | Invoke-Expression
           Write-Host 'Live-style irm | iex completed WPF startup without system changes'
+      - name: Exercise the published irm pipe iex command without making changes
+        shell: powershell
+        env:
+          MARCELI_WIN_SMOKE_TEST: "1"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          irm https://win.marceli.dev/win | iex
+          Write-Host 'Published Marceli Win launcher passed the PowerShell 5.1 WPF smoke test.'
       - name: Validate website JavaScript and Worker syntax
         shell: pwsh
         run: |
