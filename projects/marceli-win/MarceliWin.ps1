@@ -230,6 +230,113 @@ $script:Actions=@(
  @{ID='wingetupgrade';Name='Update all apps';Desc='WinGet installed package updates';Group='Repair';Kind='run';Target='winget.exe';Args=@('upgrade','--all','--accept-source-agreements','--accept-package-agreements');Admin=$false},
  @{ID='wingetlist';Name='List installed packages';Desc='Inspect WinGet inventory';Group='Repair';Kind='console';Target='winget.exe';Args=@('list')}
 )
+
+# Native command execution stays OUTSIDE the WPF dispatcher: launch without -Wait and poll.
+# No secondary scripts are downloaded. All executables/arguments are allowlisted above.
+$script:CommandQueue=New-Object 'System.Collections.Generic.Queue[object]'
+$script:ActiveCommand=$null
+$script:CancelAfterCurrent=$false
+$script:CommandCompleted=0
+$script:CommandTotal=0
+$script:QueueTimer=$null
+
+function UpdateQueueView {
+ if (!$script:Window) {return}
+ $busy=($null -ne $script:ActiveCommand -or $script:CommandQueue.Count -gt 0)
+ $banner=El 'QueueBanner'
+ $label=El 'QueueStatus'
+ $bar=El 'QueueProgress'
+ $stop=El 'QueueStop'
+ $banner.Visibility=if($busy){'Visible'}else{'Collapsed'}
+ $stop.IsEnabled=($script:CommandQueue.Count -gt 0 -or $null -ne $script:ActiveCommand)
+ if ($busy) {
+  $now=if($script:ActiveCommand){$script:ActiveCommand.Label}else{'Starting'}
+  $pending=$script:CommandQueue.Count
+  $label.Text=$now+' | '+$pending+' waiting'
+  $bar.IsIndeterminate=$false
+  $bar.Minimum=0
+  $bar.Maximum=[math]::Max(1,$script:CommandTotal)
+  $bar.Value=$script:CommandCompleted
+  (El 'StatusText').Text='Executing approved commands'
+ } else {
+  $label.Text='Ready'
+  $bar.Value=0
+  (El 'StatusText').Text='Ready'
+ }
+}
+function QueueCommand([string]$label,[string]$program,[string[]]$arguments) {
+ # All callers construct arguments from hardcoded, trusted catalogue entries.
+ if(!$script:Window){throw 'Command queue requires the desktop interface.'}
+ if([string]::IsNullOrWhiteSpace($label) -or [string]::IsNullOrWhiteSpace($program)){throw 'Invalid queued command.'}
+ $safe=@($arguments)
+ $script:CommandQueue.Enqueue([pscustomobject]@{Label=$label;Program=$program;Arguments=$safe})
+ $script:CommandTotal++
+ Log ('QUEUED: '+$label)
+ UpdateQueueView
+ StartNextCommand
+}
+function StartNextCommand {
+ if($script:ActiveCommand -or $script:CommandQueue.Count -eq 0){return}
+ if($script:CancelAfterCurrent){
+  $script:CommandQueue.Clear()
+  $script:CancelAfterCurrent=$false
+  $script:CommandCompleted=$script:CommandTotal
+  UpdateQueueView
+  return
+ }
+ $task=$script:CommandQueue.Dequeue()
+ try {
+  # -Wait is intentionally NOT supplied: this returns immediately to the WPF event loop.
+  # The installer may show its own native UI, including elevation and licence agreements.
+  $exe=Get-Command -Name $task.Program -CommandType Application -ErrorAction Stop |
+     Select-Object -First 1 -ExpandProperty Source
+  $p=Start-Process -FilePath $exe -ArgumentList $task.Arguments -PassThru -ErrorAction Stop
+  if(!$p){throw 'Process did not return a handle.'}
+  $script:ActiveCommand=[pscustomobject]@{Label=$task.Label;Process=$p;Started=Get-Date}
+  if(!$script:QueueTimer.IsEnabled){$script:QueueTimer.Start()}
+  Log ('STARTED: '+$task.Label+' (PID '+$p.Id+')')
+ } catch {
+  Log ('FAILED TO START: '+$task.Label+' - '+$_.Exception.Message)
+  $script:CommandCompleted++
+  # Defer the next queue item to the timer to avoid recursive process starts.
+  if(!$script:QueueTimer.IsEnabled){$script:QueueTimer.Start()}
+ }
+ UpdateQueueView
+}
+function PollCommandQueue {
+ if($null -ne $script:ActiveCommand){
+  $running=$script:ActiveCommand
+  try {
+   if($running.Process.HasExited){
+    $exit=$running.Process.ExitCode
+    $seconds=[math]::Round(((Get-Date)-$running.Started).TotalSeconds,1)
+    Log ('FINISHED: '+$running.Label+' (exit '+$exit+', '+$seconds+'s)')
+    if($exit -ne 0){Log ('WARNING: '+$running.Label+' returned non-zero; inspect the installer output.')}
+    $running.Process.Dispose()
+    $script:ActiveCommand=$null
+    $script:CommandCompleted++
+   }
+  } catch {
+   Log ('Unable to inspect operation: '+$_.Exception.Message)
+   try {$running.Process.Dispose()}catch{}
+   $script:ActiveCommand=$null
+   $script:CommandCompleted++
+  }
+ }
+ if($null -eq $script:ActiveCommand -and $script:CancelAfterCurrent){
+  $skipped=$script:CommandQueue.Count
+  $script:CommandQueue.Clear()
+  $script:CommandCompleted=$script:CommandTotal
+  $script:CancelAfterCurrent=$false
+  Log ('STOPPED: skipped '+$skipped+' remaining operations. Active installer was not terminated.')
+ }
+ if($null -eq $script:ActiveCommand -and $script:CommandQueue.Count -gt 0){StartNextCommand}
+ if($null -eq $script:ActiveCommand -and $script:CommandQueue.Count -eq 0){
+  if($script:QueueTimer.IsEnabled){$script:QueueTimer.Stop()}
+  $script:CommandTotal=0;$script:CommandCompleted=0
+ }
+ UpdateQueueView
+}
 function RunAction([string]$id) {
  $item=$script:Actions | Where-Object {$_.ID -eq $id} | Select-Object -First 1
  if (!$item) {Log ('Unknown action: '+$id);return}
@@ -238,25 +345,22 @@ function RunAction([string]$id) {
   catch {Log ('Could not open '+$item.Name+': '+$_.Exception.Message)}
   return
  }
- $arguments=@($item.Args);$command=$item.Target+' '+($arguments -join ' ')
+ $arguments=@($item.Args)
+ $command=$item.Target+' '+($arguments -join ' ')
  if ($item.Admin -and !(IsAdmin)) {
   [Windows.MessageBox]::Show('This operation needs an elevated PowerShell session.','Administrator required')|Out-Null
   return
  }
- $answer=[Windows.MessageBox]::Show('Run this reviewed Windows command?'+[Environment]::NewLine+$command,'Marceli Win  -  Confirm','YesNo','Question')
+ $answer=[Windows.MessageBox]::Show('Queue this reviewed Windows command?'+[Environment]::NewLine+$command,'Marceli Win - Confirm','YesNo','Question')
  if ($answer -ne 'Yes') {return}
- Log ('Running '+$command)
- try {
-  if ($item.Kind -eq 'console') {
-   # Fixed allowlisted command; arguments are hard-coded above, not user input.
-   $line='& "'+$item.Target+'" '+($arguments -join ' ')
-   Start-Process 'powershell.exe' -ArgumentList @('-NoProfile','-NoExit','-Command',$line) | Out-Null
-   Log 'Opened output in separate console.'
-  } else {
-   $p=Start-Process -FilePath $item.Target -ArgumentList $arguments -Wait -PassThru
-   Log ($item.Name+' exit code: '+$p.ExitCode)
-  }
- } catch {Log ('Failed: '+$_.Exception.Message)}
+ if ($item.Kind -eq 'console') {
+  # Display diagnostics in a separate console; do not execute a string from imported profiles.
+  $line='& "'+$item.Target+'" '+($arguments -join ' ')
+  try {
+   Start-Process 'powershell.exe' -ArgumentList @('-NoProfile','-NoExit','-Command',$line) -ErrorAction Stop|Out-Null
+   Log ('Opened diagnostic console: '+$item.Name)
+  } catch {Log ('Console failed: '+$_.Exception.Message)}
+ } else {QueueCommand $item.Name $item.Target $arguments}
 }
 function ExportReport {
  $save=New-Object Microsoft.Win32.SaveFileDialog
@@ -515,11 +619,24 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
       </StackPanel>
      </Grid>
     </ScrollViewer>
-    <Border Grid.Row="3" Background="#131E32" CornerRadius="14" BorderBrush="#2A395A" BorderThickness="1" Padding="13" Margin="0,12,0,0">
+    <Grid Grid.Row="3" Margin="0,7,0,0">
+     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+     <Border Name="QueueBanner" Grid.Row="0" Background="#252F51" BorderBrush="#55639B" BorderThickness="1" CornerRadius="12" Padding="8" Visibility="Collapsed" Margin="0,0,0,7">
+      <Grid>
+       <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <StackPanel>
+        <TextBlock Name="QueueStatus" Text="Ready" Foreground="#E6EDFF" FontSize="11" TextTrimming="CharacterEllipsis"/>
+        <ProgressBar Name="QueueProgress" Height="5" Margin="0,5,5,0" Foreground="#9184FE" Background="#17233B" Value="0"/>
+       </StackPanel>
+       <Button Name="QueueStop" Grid.Column="1" Content="Stop after current" Padding="11,5" Style="{StaticResource ActionButton}" ToolTip="Skips pending commands; never forcibly kills an active installer"/>
+      </Grid>
+     </Border>
+     <Border Grid.Row="1" Background="#131E32" CornerRadius="14" BorderBrush="#2A395A" BorderThickness="1" Padding="13" Margin="0,12,0,0">
      <DockPanel><DockPanel DockPanel.Dock="Top" Margin="2,0,0,8"><TextBlock Text="&#x25CF;  LIVE LOCAL ACTIVITY" FontSize="11" FontWeight="Bold" Foreground="#8FDBDA"/><TextBlock Name="StatusText" Text="Ready" DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="#8EA1C5" FontSize="11"/></DockPanel>
       <TextBox Name="LogText" Background="#0D1525" Foreground="#C0F2E5" BorderThickness="0" FontFamily="Consolas" FontSize="11" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
      </DockPanel>
-    </Border>
+     </Border>
+    </Grid>
    </Grid>
   </Grid>
  </Grid>
@@ -527,6 +644,16 @@ Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
 '@
 $script:Window=[Windows.Markup.XamlReader]::Load([Xml.XmlNodeReader]::new($ui))
 function El([string]$id) { $script:Window.FindName($id) }
+$script:QueueTimer=[Windows.Threading.DispatcherTimer]::new()
+$script:QueueTimer.Interval=[TimeSpan]::FromMilliseconds(300)
+$script:QueueTimer.Add_Tick({PollCommandQueue})
+(El 'QueueStop').Add_Click({
+ if($script:ActiveCommand -or $script:CommandQueue.Count -gt 0){
+  $script:CancelAfterCurrent=$true
+  Log 'Stop requested: pending commands will be skipped after the active installer exits.'
+  if(!$script:ActiveCommand){PollCommandQueue}
+ }
+})
 $script:LogBox=El 'LogText'
 $script:MotionEnabled=$true
 $script:MotionTargets=@()
@@ -762,13 +889,18 @@ function InstallSelectedApps {
  $wanted=@(SelectedApps)
  $apps=@($script:Apps|Where-Object {$wanted -contains $_.ID})
  if(!$apps.Count){Log 'Select apps first.';return}
- if(!(Get-Command winget.exe -ErrorAction SilentlyContinue)){Log 'WinGet is not installed or not in PATH.';return}
- $message='Install '+$apps.Count+' selected packages via WinGet?'+[Environment]::NewLine+($apps.Name -join ', ')
- if([Windows.MessageBox]::Show($message,'Marceli Win','YesNo') -ne 'Yes'){return}
- foreach($a in $apps) {
-  Log ('Installing '+$a.Name+' ['+$a.ID+']')
-  try {$p=Start-Process 'winget.exe' -ArgumentList @('install','--id',$a.ID,'--exact','--accept-source-agreements','--accept-package-agreements') -Wait -PassThru;Log ($a.Name+' exit code '+$p.ExitCode)}
-  catch {Log ('Install failed: '+$_.Exception.Message)}
+ if(!(Get-Command winget.exe -CommandType Application -ErrorAction SilentlyContinue)){
+  Log 'WinGet is not installed or not in PATH. Install Microsoft App Installer first.'
+  return
+ }
+ $message='Queue '+$apps.Count+' exact packages from the WinGet community source?'+[Environment]::NewLine+
+  ($apps.Name -join ', ')+[Environment]::NewLine+
+  'Installers may prompt separately for licence terms and elevation. Cancel pending tasks from the activity panel.'
+ if([Windows.MessageBox]::Show($message,'Marceli Win - Confirm install','YesNo','Question') -ne 'Yes'){return}
+ foreach($app in $apps){
+  # Hardcoded package IDs only; exact match and source restriction avoid ambiguous installs.
+  $args=@('install','--id',[string]$app.ID,'--exact','--source','winget','--accept-source-agreements')
+  QueueCommand ('Install '+$app.Name) 'winget.exe' $args
  }
 }
 (El 'Install').Add_Click({InstallSelectedApps})
