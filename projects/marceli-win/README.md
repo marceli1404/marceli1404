@@ -21,7 +21,7 @@ Original, independently written Windows 10/11 PowerShell + WPF utility with a mo
 | Web | Responsive CSS morphing visuals, interactive filter/searchable feature explorer, preview illustration, copyable commands and reduced-motion support |
 | Privacy | No telemetry, remote command source, or background analytics. Activity logs stay in the local user profile |
 | Execution engine | Sequential native-process queue with an active-job label, progress and stop-after-current; closing while busy warns before leaving an installer detached |
-| Registry diff | Inspect the current value and original type before writing, skip unchanged tweaks, refuse backup writes when persistence fails, and validate undo against the trusted catalogue |
+| Registry recovery | Diff old/new values, skip no-ops, save a crash-recovery journal **before** writes, automatically undo a failed batch and block changes pending recovery on next launch. Original registry types and latest completed undo are preserved |
 
 **Catalogue counts do not imply that all actions are unique capabilities or that all Windows versions support every registry value.** Some shortcuts vary by Windows version, and individual WinGet packages may be unavailable in your region.
 
